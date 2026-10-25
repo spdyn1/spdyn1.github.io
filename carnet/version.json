@@ -1,5 +1,1 @@
-{
-  "versionCode": 4,
-  "versionName": "0.4",
-  "notes": "Carnet t'avertit désormais lui-même quand une nouvelle version est disponible."
-}
+{"versionCode": 5, "versionName": "0.5", "notes": "L'Aide indique maintenant la version installée (« À propos », en bas)."}
