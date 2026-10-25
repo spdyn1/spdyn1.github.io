@@ -59,7 +59,7 @@ def main() -> None:
     envoi = "--sans-envoi" not in args
     fichiers = [Path(a) for a in args if a != "--sans-envoi"]
     if envoi:
-        git("pull", "-q", "--rebase")
+        git("pull", "-q", "--rebase", "--autostash")
     PAGES.mkdir(parents=True, exist_ok=True)
     for f in fichiers:
         if f.suffix.lower() != ".html" or not f.is_file():
