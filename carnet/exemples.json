@@ -1,0 +1,25 @@
+{
+ "exemples": [
+  {
+   "id": "a8cde5a7-8758-459b-b33f-9cd4f0cfafea",
+   "titre": "Frise biblique",
+   "description": "Chronologie d’Adam au Ier siècle, colorée par période",
+   "fichier": "exemples/frise-biblique.carnet",
+   "modifiée": "2026-10-25T18:36:48.476Z"
+  },
+  {
+   "id": "8d56d1c6-0525-4c18-992b-6fdb5f6c2e96",
+   "titre": "Arbre généalogique biblique",
+   "description": "D’Adam à Jésus, une fiche par personne",
+   "fichier": "exemples/arbre-biblique.carnet",
+   "modifiée": "2026-10-25T18:37:15.945Z"
+  },
+  {
+   "id": "3f6c1e2a-9b4d-4c7e-8a51-c4d2e7b90f13",
+   "titre": "Généalogies des Chroniques",
+   "description": "1 Chroniques 1 – 9, autres noms vérifiés",
+   "fichier": "exemples/genealogies-chroniques.carnet",
+   "modifiée": "2026-10-25T18:37:38.478Z"
+  }
+ ]
+}
