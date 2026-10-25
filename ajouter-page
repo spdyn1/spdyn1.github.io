@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+"""Pages « À regarder dans le navigateur » du site Carnet.
+
+    ./ajouter-page [fichier.html ...] [--sans-envoi]
+
+Copie les fichiers donnés dans carnet/pages/, puis refait carnet/pages.json à partir de toutes
+les pages de ce dossier, et enfin commite et pousse (sauf --sans-envoi). Sans fichier : refait
+seulement la liste (après avoir supprimé, renommé ou modifié une page à la main).
+
+Chaque page fournit elle-même ce qui s'affiche sur l'accueil :
+    <title>Frise biblique</title>                                 titre du bouton (obligatoire)
+    <meta name="description" content="D'Adam au Ier siècle">     ligne sous le titre
+    <meta name="carnet-icone" content="🕰️">                      icône (sinon 📄)
+
+L'ordre de pages.json est gardé : les nouvelles pages vont à la fin. Pour changer l'ordre,
+déplace les lignes dans pages.json puis relance le script.
+"""
+import html
+import json
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+RACINE = Path(__file__).resolve().parent
+PAGES = RACINE / "carnet" / "pages"
+LISTE = RACINE / "carnet" / "pages.json"
+
+
+def meta(texte: str, nom: str) -> str:
+    for balise in re.findall(r"<meta\b[^>]*>", texte, re.I):
+        if re.search(rf"""name\s*=\s*["']{re.escape(nom)}["']""", balise, re.I):
+            m = re.search(r"""content\s*=\s*"([^"]*)"|content\s*=\s*'([^']*)'""", balise, re.I)
+            if m:
+                return html.unescape(m.group(1) or m.group(2) or "").strip()
+    return ""
+
+
+def decrire(f: Path) -> dict:
+    texte = f.read_text(encoding="utf-8", errors="replace")
+    titre = re.search(r"<title[^>]*>(.*?)</title>", texte, re.I | re.S)
+    if not titre or not titre.group(1).strip():
+        sys.exit(f"{f.name} : pas de <title>, la page n'a pas de nom à afficher.")
+    return {
+        "fichier": f"pages/{f.name}",
+        "titre": " ".join(html.unescape(titre.group(1)).split()),
+        "description": meta(texte, "description"),
+        "icone": meta(texte, "carnet-icone") or "📄",
+    }
+
+
+def git(*args: str) -> None:
+    subprocess.run(["git", "-C", str(RACINE), *args], check=True)
+
+
+def main() -> None:
+    args = sys.argv[1:]
+    envoi = "--sans-envoi" not in args
+    fichiers = [Path(a) for a in args if a != "--sans-envoi"]
+    if envoi:
+        git("pull", "-q", "--rebase")
+    PAGES.mkdir(parents=True, exist_ok=True)
+    for f in fichiers:
+        if f.suffix.lower() != ".html" or not f.is_file():
+            sys.exit(f"{f} : il faut un fichier .html existant.")
+        if f.resolve() != (PAGES / f.name).resolve():
+            shutil.copy2(f, PAGES / f.name)
+
+    pages = {f"pages/{f.name}": decrire(f) for f in sorted(PAGES.glob("*.html"))}
+    ancien = json.loads(LISTE.read_text(encoding="utf-8")) if LISTE.exists() else []
+    ordre = [p["fichier"] for p in ancien if p.get("fichier") in pages]
+    ordre += [k for k in pages if k not in ordre]
+    liste = [pages[k] for k in ordre]
+    LISTE.write_text(json.dumps(liste, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+
+    for p in liste:
+        print(f"  {p['icone']} {p['titre']}  ({p['fichier']})")
+    if envoi:
+        git("add", "-A", "carnet/pages", str(LISTE))
+        if subprocess.run(["git", "-C", str(RACINE), "diff", "--cached", "--quiet"]).returncode == 0:
+            print("Rien de nouveau à publier.")
+            return
+        noms = ", ".join(f.stem for f in fichiers) or "liste"
+        git("commit", "-q", "-m", f"Pages : {noms}")
+        git("push", "-q")
+        print("Publié : https://spdyn1.github.io/carnet/ (visible d'ici une à deux minutes)")
+
+
+if __name__ == "__main__":
+    main()

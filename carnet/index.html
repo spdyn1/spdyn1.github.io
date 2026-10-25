@@ -59,7 +59,8 @@
   .switch i::after { content: ""; position: absolute; right: 2px; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--accent-text); }
   @keyframes pulse { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 30%, transparent); } }
   @media (prefers-reduced-motion: reduce) { .tap, .switch i { animation: none !important; } }
-  .pages a.big { display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .pages a.big { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .pages a.big small { font-weight: 400; font-size: 0.95rem; opacity: 0.85; }
   .qr { text-align: center; }
   .qr img { width: 220px; height: 220px; background: #fff; padding: 10px; border-radius: 12px; }
   .url { font-family: ui-monospace, monospace; word-break: break-all; color: var(--soft); font-size: 0.95rem; }
@@ -135,8 +136,7 @@
   <section class="pages">
     <h2>🌐 À regarder dans le navigateur</h2>
     <p class="sub">Sur téléphone, tablette ou ordinateur, même iPhone. Rien à installer.</p>
-    <a class="big" href="frise.html">🕰️ Frise biblique</a>
-    <a class="big" href="arbre.html">🌳 Arbre généalogique biblique</a>
+    <div id="pages"><p class="sub">Chargement de la liste…</p></div>
   </section>
 
   <section class="qr">
@@ -151,6 +151,20 @@
 <script>
   // hors Android : on prévient que l'appli ne s'installera pas ici
   if (!/Android/i.test(navigator.userAgent)) document.getElementById('pas-android').classList.remove('hidden');
+
+  // pages à consulter : liste tenue par le script ajouter-page (carnet/pages.json)
+  fetch('pages.json', { cache: 'no-cache' }).then(r => r.json()).then(pages => {
+    const zone = document.getElementById('pages');
+    zone.replaceChildren(...pages.map(p => {
+      const a = document.createElement('a');
+      a.className = 'big'; a.href = p.fichier;
+      a.append(`${p.icone} ${p.titre}`);
+      if (p.description) { const d = document.createElement('small'); d.textContent = p.description; a.append(d); }
+      return a;
+    }));
+  }).catch(() => {
+    document.getElementById('pages').innerHTML = '<p class="sub">Liste indisponible pour le moment : recharge la page.</p>';
+  });
 </script>
 </body>
 </html>

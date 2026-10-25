@@ -1,0 +1,14 @@
+[
+ {
+  "fichier": "pages/frise.html",
+  "titre": "Frise biblique",
+  "description": "D’Adam au Ier siècle",
+  "icone": "🕰️"
+ },
+ {
+  "fichier": "pages/arbre.html",
+  "titre": "Arbre généalogique biblique",
+  "description": "D’Adam à Jésus",
+  "icone": "🌳"
+ }
+]
