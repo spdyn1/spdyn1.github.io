@@ -124,8 +124,8 @@
         </div>
       </li>
       <li>
-        <strong>Ouvre Carnet</strong>, puis touche les deux boutons de l'écran d'accueil :
-        « Télécharger la Bible en français » et « Ajouter la Frise et l'Arbre ». C'est prêt !
+        <strong>Ouvre Carnet</strong> : l'écran d'accueil propose de « Télécharger » la Bible en français,
+        puis de « Voir » les notes d'exemple (Frise, Arbre, Généalogies des Chroniques…). C'est prêt !
       </li>
     </ol>
 
@@ -146,11 +146,15 @@
     <p class="url">https://spdyn1.github.io/carnet/</p>
   </section>
 
-  <footer>Carnet 0.8</footer>
+  <footer id="version">Carnet</footer>
 </main>
 <script>
   // hors Android : on prévient que l'appli ne s'installera pas ici
   if (!/Android/i.test(navigator.userAgent)) document.getElementById('pas-android').classList.remove('hidden');
+
+  // numéro de la version proposée (version.json, lu aussi par l'appli)
+  fetch('version.json', { cache: 'no-cache' }).then(r => r.json())
+    .then(v => { document.getElementById('version').textContent = 'Carnet ' + v.versionName; }).catch(() => {});
 
   // pages à consulter : liste tenue par le script ajouter-page (carnet/pages.json)
   fetch('pages.json', { cache: 'no-cache' }).then(r => r.json()).then(pages => {
