@@ -1,1 +1,1 @@
-{"versionCode": 8, "versionName": "0.8", "notes": "Les nouvelles versions sont signalées dès que tu reviens dans Carnet, sans avoir à le fermer.", "apk": "Carnet.apk", "sha256": "ce3cd09c23608f238d6f3bdbe2e038fa4c49e4c0551ff086b6f2c029cf0eab6f"}
+{"versionCode": 100, "versionName": "1.0", "notes": "Carnet 2 : application entièrement refaite. Attention : les notes de Carnet 0.x ne sont pas reprises automatiquement — fais d'abord une sauvegarde et fais-la convertir.", "apk": "Carnet.apk", "sha256": "011741a8823a931fc3ed0cafac5188057de7d35f65514b34130628b6c636028b"}
