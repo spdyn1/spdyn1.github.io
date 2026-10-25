@@ -10,5 +10,11 @@
   "titre": "Arbre généalogique biblique",
   "description": "D’Adam à Jésus",
   "icone": "🌳"
+ },
+ {
+  "fichier": "pages/genealogies-chroniques.html",
+  "titre": "Généalogies des Chroniques",
+  "description": "1 Chroniques 1 – 9 : carte et listes, autres noms vérifiés",
+  "icone": "📜"
  }
 ]
