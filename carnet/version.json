@@ -1,1 +1,1 @@
-{"versionCode": 104, "versionName": "1.0.4", "notes": "Paragraphes plus serrés avec une petite police ; dossier de dépôt surveillé sur tous les écrans ; import plus sûr (identifiants en double corrigés, rien n'est perdu).", "apk": "Carnet.apk", "sha256": "1ed629bafeef43cf42ec9015c10fef4313f05396cbdb9fa596df2b79ddbf3a04"}
+{"versionCode": 105, "versionName": "1.0.5", "notes": "Le bouton « Ouvrir » à la fin d'une mise à jour rouvre Carnet (à partir de la mise à jour suivante).", "apk": "Carnet.apk", "sha256": "7d0227281fbe1f7d743812059d390b4d5dd2afae94fb7f4adf862ca434720ab5"}
