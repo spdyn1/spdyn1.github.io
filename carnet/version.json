@@ -1,1 +1,1 @@
-{"versionCode": 102, "versionName": "1.0.2", "notes": "Aide : nouvelle section « Changer de téléphone » (sauvegarder, envoyer, restaurer).", "apk": "Carnet.apk", "sha256": "2ca552a1ef71de11461d917f18ab96ee5645bc1d88fdc471e2d94ab92ec1aecb"}
+{"versionCode": 103, "versionName": "1.0.3", "notes": "Dossier de dépôt : un fichier .carnet copié dans Android/data/com.spdyn1.carnet/files/Dépôt est proposé à l'import au retour dans Carnet.", "apk": "Carnet.apk", "sha256": "2eff0bee1ed56e1383049814b097b5be4f0c748a4b4cfd5650b47fada85e2b77"}
