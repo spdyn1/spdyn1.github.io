@@ -156,6 +156,13 @@ mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
 .source{font-size:12px;color:var(--muted);margin-top:16px}
 .hint{position:fixed;left:max(12px,env(safe-area-inset-left,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:4;font-size:12px;color:var(--muted);
   background:var(--surface);border:1px solid var(--line);padding:3px 9px;border-radius:6px;max-width:70vw}
+.btn.fs{display:inline-flex;align-items:center;justify-content:center;padding:5px 8px}
+.btn.fs svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn.fs .moins,body.plein .btn.fs .plus{display:none}
+body.plein .btn.fs .moins{display:inline}
+body.plein .brand,body.plein .legend{display:none}
+body.plein .top{padding-block:6px}
+body.plein .tools{margin-left:auto;width:auto;flex:1 1 auto}
 @media (max-width:899.98px){.tools{width:100%;margin-left:0}.search{flex-basis:140px}.legend{display:none}}
 </style>
 </head>
@@ -177,6 +184,7 @@ mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
         <ul class="results" id="res" role="listbox" hidden></ul>
       </div>
       <span class="zoom"><button class="btn" id="zm" aria-label="Dézoomer">−</button><button class="btn" id="zp" aria-label="Zoomer">+</button></span>
+      <button class="btn fs" id="fs" aria-label="Plein écran" title="Plein écran"><svg class="plus" viewBox="0 0 16 16"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4"/></svg><svg class="moins" viewBox="0 0 16 16"><path d="M6 2v4H2M14 6h-4V2M10 14v-4h4M2 10h4v4"/></svg></button>
       <button class="switch" id="sw" role="switch" aria-checked="true"><span class="tr"></span>Fiches</button>
     </div>
   </div>
@@ -493,6 +501,26 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#fiche
 /* ---------- départ ---------- */
 const setHead = () => document.documentElement.style.setProperty('--head-h', $('#top').offsetHeight + 'px');
 setHead(); addEventListener('resize', () => { setHead(); });
+/* ---------- plein écran : en-tête réduit + plein écran du navigateur s'il existe (pas sur iPhone) ---------- */
+const fsBtn = $('#fs'), docEl = document.documentElement;
+const fsApi = docEl.requestFullscreen ? 'requestFullscreen' : docEl.webkitRequestFullscreen ? 'webkitRequestFullscreen' : null;
+const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+function setPlein(on) {
+  const c = centreAnnee();
+  document.body.classList.toggle('plein', on);
+  fsBtn.setAttribute('aria-label', on ? 'Quitter le plein écran' : 'Plein écran'); fsBtn.title = fsBtn.getAttribute('aria-label');
+  setHead(); allerA(c);
+}
+fsBtn.onclick = () => {
+  const on = !document.body.classList.contains('plein');
+  if (fsApi) {
+    if (on) { const r = docEl[fsApi](); if (r && r.catch) r.catch(() => {}); }
+    else if (fsEl()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  }
+  setPlein(on);
+};
+const fsSync = () => { if (!fsEl() && document.body.classList.contains('plein')) setPlein(false); };
+document.addEventListener('fullscreenchange', fsSync); document.addEventListener('webkitfullscreenchange', fsSync);
 ppy = Math.max(0.2, tl.clientWidth / 2350);
 layout();
 allerA(-1000);
