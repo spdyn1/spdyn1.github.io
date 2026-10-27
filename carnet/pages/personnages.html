@@ -413,7 +413,7 @@ for (const p of [...dated, ...interp]) {
   b.className = 'it ' + (p.interp ? 'g' : p.c) + (p.nature === 'règne' ? ' r' : '') + (p.pt ? ' pt' : '') + (p.lig ? ' lig' : '');
   b.innerHTML = '<span class="bar"></span><span class="nm">' + esc(p.nom) + '</span>';
   b.title = p.nom + ' · ' + quand(p, true);
-  b.addEventListener('click', () => sel === p.k && autour == null ? deselect() : choisir(p.k, false));
+  b.addEventListener('click', () => { if (sel === p.k && autour == null) deselect(); else { choisir(p.k, false); cadrer(p); } });
   b.hidden = true; p.el = b; cv.appendChild(b);
 }
 for (const e of EV) {
@@ -643,6 +643,36 @@ function montrer(p) {
   const r = tl.getBoundingClientRect();
   tl.scrollTo({left: p.px - r.width / 3, top: Math.max(0, p.top - r.height / 3), behavior: 'smooth'});
   p.el.classList.remove('flash'); void p.el.offsetWidth; p.el.classList.add('flash');
+}
+function cadrer(p) {                  // clic sur la frise : faire défiler juste assez pour voir la personne et ses proches reliés
+  if (!p.el || p.el.hidden || mode === 'arb') return;
+  const oy = cv.offsetTop, M = 24, vis = o => o.el && !o.el.hidden;
+  const r = tl.getBoundingClientRect(), f = $('#fiche'), fr = f.hidden ? null : f.getBoundingClientRect();
+  let vw = tl.clientWidth, vh = tl.clientHeight, haut = axis.offsetHeight;
+  if (fr && fr.left > r.left + vw / 2) vw = Math.min(vw, fr.left - r.left);       // fiche à droite (ordinateur)
+  else if (fr && fr.top > r.top + vh / 3) vh = Math.min(vh, fr.top - r.top);       // fiche en bas (téléphone)
+  const gens = () => [p, ...[...p.par, ...p.enf, ...p.ep, ...p.inter].map(r => P[r.k]).filter(vis)];
+  // trop étalé pour l'écran : dézoomer juste assez (pas au-delà de 3 siècles visibles), sur l'axe du temps seulement
+  const g = gens(), nmw = o => o.el.querySelector('.nm').offsetWidth + 12;          // le nom ne rétrécit pas, la barre si
+  const larg = k => Math.max(...g.map(o => o.px * k + Math.max(o.pw * k, nmw(o)))) - Math.min(...g.map(o => o.px * k));
+  const kmin = Math.min(1, vw / 300 / ppy);
+  if (larg(1) + 2 * M > vw && kmin < 1) {
+    let lo = kmin, hi = 1;
+    for (let i = 0; i < 20; i++) { const k = (lo + hi) / 2; if (larg(k) + 2 * M <= vw) lo = k; else hi = k; }
+    const y = (Math.min(...g.map(o => o.px)) + Math.max(...g.map(o => o.px + o.el.offsetWidth))) / 2 / ppy + Y0;
+    zoom(lo, y);
+  }
+  const box = o => [o.px, o.px + o.el.offsetWidth, oy + o.top, oy + o.top + 22];
+  const tous = gens().map(box);
+  // un axe : voir tout [a, b] si ça tient, sinon le plus possible en gardant la personne [pa, pb] visible
+  const axe = (cur, deb, lg, a, b, pa, pb) => {
+    const lo = pb + M - (deb + lg), hi = pa - M - deb;             // bornes du défilement qui gardent la personne visible
+    let t = b - a + 2 * M <= lg ? Math.min(Math.max(cur, b + M - (deb + lg)), a - M - deb) : (a + b) / 2 - deb - lg / 2;
+    return Math.max(0, Math.min(Math.max(t, lo), hi));
+  };
+  const a = i => Math.min(...tous.map(x => x[i])), b = i => Math.max(...tous.map(x => x[i])), me = tous[0];
+  const left = axe(tl.scrollLeft, 0, vw, a(0), b(1), me[0], me[1]), top = axe(tl.scrollTop, haut, vh - haut, a(2), b(3), me[2], me[3]);
+  if (Math.abs(left - tl.scrollLeft) > 2 || Math.abs(top - tl.scrollTop) > 2) tl.scrollTo({left, top, behavior: 'smooth'});
 }
 function majLig() {                  // bouton et pastille « Lignée de Jésus »
   $('#lig-b').setAttribute('aria-pressed', lig);
