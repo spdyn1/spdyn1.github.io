@@ -12,9 +12,9 @@
   "icone": "🌳"
  },
  {
-  "fichier": "pages/genealogies-chroniques.html",
-  "titre": "Généalogies des Chroniques",
-  "description": "1 Chroniques 1 – 9 : carte et listes, autres noms vérifiés",
+  "fichier": "pages/genealogies.html",
+  "titre": "Généalogies des Chroniques et d’Esdras",
+  "description": "1 Chroniques 1 – 9 et Esdras : carte et listes, autres noms vérifiés",
   "icone": "📜"
  }
 ]
