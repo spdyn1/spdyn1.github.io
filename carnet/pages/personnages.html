@@ -266,7 +266,8 @@ body.plein .tools{margin-left:auto;width:auto;flex:1 1 auto}
   <ul>
     <li>Touchez un nom : sa fiche et ses liens familiaux. Touchez le fond (ou Échap) pour revenir.</li>
     <li>« Autour de… » dans la fiche : seulement sa famille. « Arbre de… » : son arbre.</li>
-    <li>Zoom : − et +, Ctrl + molette ou pincer. ⛶ : plein écran. « Fiches » : afficher ou non la fiche.</li>
+    <li>Se déplacer : glisser (doigt, ou deux doigts sur le pavé tactile). Zoom : − et +, Ctrl + molette, ou pincer (écran ou pavé tactile).</li>
+    <li>⛶ : plein écran. « Fiches » : afficher ou non la fiche.</li>
   </ul>
   <h3>Sources</h3>
   <ul>
@@ -652,12 +653,24 @@ function zoom(f, yc) {
   tl.scrollLeft = (y - Y0) * ppy - off;
 }
 $("#zp").onclick = () => zoom(1.5); $("#zm").onclick = () => zoom(1 / 1.5);
+// Touchpad : glisser à deux doigts = défilement normal du navigateur ; pincer = Ctrl + molette (Chrome, Firefox, Edge)
+// ou événements « gesture » (Safari). Les petits pas sont cumulés et appliqués une fois par image.
+let zf = 1, zy = null, zRaf = 0;
+function zoomDoux(f, clientX) {
+  const r = tl.getBoundingClientRect();
+  zf *= f; zy = (tl.scrollLeft + clientX - r.left) / ppy + Y0;
+  if (!zRaf) zRaf = requestAnimationFrame(() => { zRaf = 0; const g = zf; zf = 1; zoom(g, zy); });
+}
 tl.addEventListener('wheel', e => {
   if (!e.ctrlKey && !e.metaKey) return;
   e.preventDefault();
-  const r = tl.getBoundingClientRect();
-  zoom(e.deltaY < 0 ? 1.2 : 1 / 1.2, (tl.scrollLeft + e.clientX - r.left) / ppy + Y0);
+  const d = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1);
+  zoomDoux(Math.min(1.25, Math.max(0.8, Math.exp(-d * 0.01))), e.clientX);
 }, {passive: false});
+let gs = 1;
+tl.addEventListener('gesturestart', e => { e.preventDefault(); gs = 1; });
+tl.addEventListener('gesturechange', e => { e.preventDefault(); zoomDoux(e.scale / gs, e.clientX); gs = e.scale; });
+tl.addEventListener('gestureend', e => e.preventDefault());
 const pts = new Map(); let pinch = null;
 tl.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') pts.set(e.pointerId, e.clientX); });
 tl.addEventListener('pointermove', e => {

@@ -279,7 +279,7 @@ dialog.aide li{margin:2px 0}
   </ul>
   <h3>Gestes sur la carte</h3>
   <ul>
-    <li>Glisser pour se déplacer ; molette ou deux doigts pour zoomer ; « Tout voir » pour revenir à l’ensemble.</li>
+    <li>Se déplacer : glisser, ou deux doigts sur le pavé tactile. Zoomer : pincer (écran ou pavé tactile), molette de la souris, ou − et +. « Tout voir » : revenir à l’ensemble.</li>
     <li>Toucher un nom : sa fiche (versets, autres noms, Étude perspicace). « Fiches » : afficher ou non la fiche. « Plein écran ».</li>
   </ul>
   <h3>Signes</h3>
@@ -603,8 +603,27 @@ function ovDraw() {
       p.el.style.left = p.x + 'px'; p.el.style.top = y + 'px';
     });
   });
-  ovSvg.call(ovZoom).on('dblclick.zoom', null);
+  ovSvg.call(ovZoom).on('dblclick.zoom', null).on('wheel.zoom', null);
 }
+// Molette et pavé tactile (sur toute la carte, étiquettes comprises) : deux doigts = se déplacer ; pincer (Ctrl + molette,
+// ou « gesture » sur Safari) = zoomer ; une vraie molette de souris (grands pas entiers, sans pas horizontal) zoome aussi.
+const ovPt = e => { const r = $('#ov').getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+$('#map').addEventListener('wheel', e => {
+  if (!ovSvg) return;
+  e.preventDefault();
+  const m = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1, dx = e.deltaX * m, dy = e.deltaY * m;
+  const souris = e.deltaMode === 1 || (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 50);
+  if (e.ctrlKey || e.metaKey || souris)
+    ovSvg.call(ovZoom.scaleBy, Math.min(1.5, Math.max(1 / 1.5, Math.exp(-dy * (souris ? 0.002 : 0.01)))), ovPt(e));
+  else {
+    const k = d3.zoomTransform($('#ov')).k;
+    ovSvg.call(ovZoom.translateBy, -dx / k, -dy / k);
+  }
+}, {passive: false});
+let ovGs = 1;
+$('#map').addEventListener('gesturestart', e => { e.preventDefault(); ovGs = 1; });
+$('#map').addEventListener('gesturechange', e => { e.preventDefault(); if (ovSvg) ovSvg.call(ovZoom.scaleBy, e.scale / ovGs, ovPt(e)); ovGs = e.scale; });
+$('#map').addEventListener('gestureend', e => e.preventDefault());
 function ovFit() {
   const r = $('#map').getBoundingClientRect(), pad = 40;
   const k = Math.min((r.width - pad * 2) / OV.w, (r.height - pad * 2) / OV.h, 1);
