@@ -190,7 +190,17 @@ mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
 .ov-ctl{position:absolute;right:10px;bottom:10px;display:flex;gap:6px}
 .ov-ctl button{border:1px solid var(--line);background:var(--surface);border-radius:8px;min-width:36px;height:34px;padding:0 10px;cursor:pointer;font-size:14px}
 .ov-ctl button:hover{background:var(--soft)}
-.ov-hint{position:absolute;left:10px;bottom:10px;font-size:12px;color:var(--muted);background:var(--surface);padding:2px 8px;border-radius:6px;max-width:60%}
+/* mode d'emploi */
+.btn.aide-b{font-weight:600;font-family:var(--f-name);font-size:16px;line-height:1;padding:5px 9px}
+dialog.aide{border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);padding:18px 20px 16px;
+  max-width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 40px);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog.aide::backdrop{background:rgba(0,0,0,.35)}
+@media (min-width:900px){.tools{flex-wrap:nowrap}.search{flex-basis:200px}}
+dialog.aide h2{font-family:var(--f-name);font-size:22px;margin:0 0 8px}
+dialog.aide h3{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:14px 0 4px}
+dialog.aide ul{margin:0;padding-left:18px;font-size:14.5px}
+dialog.aide li{margin:2px 0}
+.aide-x{float:right;border:1px solid var(--line);background:transparent;border-radius:8px;padding:2px 9px;cursor:pointer;margin-left:8px}
 /* vue d'ensemble : carte sur toute la largeur, fiche flottante (option), plein écran */
 .layout.ovm{grid-template-columns:minmax(0,1fr);padding-bottom:16px}
 .layout.ovm .later{display:none}
@@ -231,6 +241,7 @@ mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
       </div>
       <button class="btn" id="b-open">Déplier tout</button>
       <button class="btn" id="b-close">Replier</button>
+      <button class="btn aide-b" id="aide-b" aria-label="Mode d’emploi" title="Mode d’emploi">?</button>
     </div>
   </div>
   <div class="legend" id="legend">
@@ -251,13 +262,37 @@ mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
     <div class="map" id="map" hidden>
       <svg id="ov" aria-label="Vue d'ensemble des généalogies"><g id="ov-vp"><g class="ov-e" id="ov-e"></g><g class="ov-n" id="ov-n"></g></g></svg>
       <div class="ov-lab" id="ov-lab"></div>
-      <div class="ov-hint">Glisser pour se déplacer · molette ou deux doigts pour zoomer · toucher un nom pour sa fiche</div>
       <div class="ov-ctl"><button id="ov-fiche" aria-pressed="true" title="Afficher la fiche du nom touché">Fiches</button><button id="ov-full" aria-pressed="false">Plein écran</button><button id="ov-out" aria-label="Zoom arrière">−</button><button id="ov-in" aria-label="Zoom avant">+</button><button id="ov-fit">Tout voir</button></div>
     </div>
     <p class="later">1 Chroniques 1 – 9 et les listes d’Esdras (chap. 2, 7, 8 et 10) sont complets. Les rois de Juda de 2 Chroniques suivent la lignée de David dans le bloc Juda.</p>
   </main>
   <aside class="fiche vide" id="fiche" aria-live="polite"></aside>
 </div>
+
+<dialog class="aide" id="aide" aria-labelledby="aide-t">
+  <button class="aide-x" id="aide-x" aria-label="Fermer le mode d’emploi">✕</button>
+  <h2 id="aide-t">Mode d’emploi</h2>
+  <h3>Deux vues</h3>
+  <ul>
+    <li><b>Carte</b> : toutes les généalogies d’un coup d’œil, groupées par bloc (Adam, Juda, Lévi…).</li>
+    <li><b>Liste</b> : un bloc à la fois (menu « Bloc »), dans l’ordre du texte ; « Déplier tout » / « Replier ».</li>
+  </ul>
+  <h3>Gestes sur la carte</h3>
+  <ul>
+    <li>Glisser pour se déplacer ; molette ou deux doigts pour zoomer ; « Tout voir » pour revenir à l’ensemble.</li>
+    <li>Toucher un nom : sa fiche (versets, autres noms, Étude perspicace). « Fiches » : afficher ou non la fiche. « Plein écran ».</li>
+  </ul>
+  <h3>Signes</h3>
+  <ul>
+    <li>Trait plein : filiation écrite ; pointillés : filiation déduite.</li>
+    <li>« aussi … » : autre nom de la même personne ; « aussi ? … » : identification probable ; « ? » : point à examiner.</li>
+    <li><span style="color:var(--accent)">●</span> roi ; ○ femme.</li>
+  </ul>
+  <h3>Voir aussi</h3>
+  <ul>
+    <li><a href="personnages.html">Personnages de la Bible</a> : tous les personnages sur une frise, avec leur arbre.</li>
+  </ul>
+</dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
@@ -611,7 +646,17 @@ $('#ov-fiche').onclick = () => {
   try { localStorage.setItem('chroniques-fiches', ovFiches ? 'oui' : 'non'); } catch (e) {}
 };
 $('#ov-full').onclick = () => ovSetFull(!$('#map').classList.contains('full'));
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#map').classList.contains('full')) ovSetFull(false); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#aide').open && $('#map').classList.contains('full')) ovSetFull(false); });
+
+/* ---------- mode d'emploi : ouvert seul à la première visite ---------- */
+const aide = $('#aide');
+$('#aide-b').onclick = () => aide.showModal();
+$('#aide-x').onclick = () => aide.close();
+aide.addEventListener('click', e => {
+  const r = aide.getBoundingClientRect();
+  if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) aide.close();
+});
+try { if (!localStorage.getItem('chroniques-aide')) { aide.showModal(); localStorage.setItem('chroniques-aide', 'vu'); } } catch (e) {}
 document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && $('#map').classList.contains('full')) ovSetFull(false); });
 function setOverview(keep) {
   ov = true; sel = null; emptyFiche();

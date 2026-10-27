@@ -1,17 +1,5 @@
 [
  {
-  "fichier": "pages/frise.html",
-  "titre": "Frise biblique",
-  "description": "D’Adam au Ier siècle",
-  "icone": "🕰️"
- },
- {
-  "fichier": "pages/arbre.html",
-  "titre": "Arbre généalogique biblique",
-  "description": "D’Adam à Jésus",
-  "icone": "🌳"
- },
- {
   "fichier": "pages/genealogies.html",
   "titre": "Généalogies des Chroniques et d’Esdras",
   "description": "1 Chroniques 1 – 9 et Esdras : carte et listes, autres noms vérifiés",
@@ -20,7 +8,7 @@
  {
   "fichier": "pages/personnages.html",
   "titre": "Personnages de la Bible",
-  "description": "Frise chronologique des personnages de la Bible et de leurs liens familiaux, d’après la Bible et Étude perspicace",
+  "description": "Frise, repères et arbre généalogique des personnages de la Bible, d’après la Bible et Étude perspicace",
   "icone": "⏳"
  }
 ]
