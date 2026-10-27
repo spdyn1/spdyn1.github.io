@@ -16,5 +16,11 @@
   "titre": "Généalogies des Chroniques et d’Esdras",
   "description": "1 Chroniques 1 – 9 et Esdras : carte et listes, autres noms vérifiés",
   "icone": "📜"
+ },
+ {
+  "fichier": "pages/personnages.html",
+  "titre": "Personnages de la Bible",
+  "description": "Frise chronologique des personnages de la Bible et de leurs liens familiaux, d’après la Bible et Étude perspicace",
+  "icone": "⏳"
  }
 ]
