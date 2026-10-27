@@ -1,1 +1,1 @@
-{"versionCode": 105, "versionName": "1.0.5", "notes": "Le bouton « Ouvrir » à la fin d'une mise à jour rouvre Carnet (à partir de la mise à jour suivante).", "apk": "Carnet.apk", "sha256": "7d0227281fbe1f7d743812059d390b4d5dd2afae94fb7f4adf862ca434720ab5"}
+{"versionCode": 106, "versionName": "1.0.6", "notes": "Un fichier .carnet reçu (mail, WhatsApp, Drive…) s'ouvre avec Carnet : touche-le ou Partager → Carnet.", "apk": "Carnet.apk", "sha256": "f635640d2b2caeb594b98b3bc6e2b8749e2b3d133bb14a32487498a748c41941"}
