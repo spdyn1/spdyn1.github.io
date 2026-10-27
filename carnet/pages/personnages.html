@@ -202,7 +202,7 @@ body.plein .tools{margin-left:auto;width:auto;flex:1 1 auto}
   <div class="canvas" id="cv"></div>
 </main>
 <aside class="fiche" id="fiche" hidden aria-live="polite"></aside>
-<div class="hint" id="hint">Touchez un nom pour sa fiche et ses liens · Ctrl + molette ou pincer pour zoomer</div>
+<div class="hint" id="hint">Touchez un nom pour sa fiche et ses liens, le fond pour revenir · Ctrl + molette ou pincer pour zoomer</div>
 
 <script>
 (() => {
@@ -275,7 +275,7 @@ for (const p of dated) {
   b.className = 'it ' + p.c + (p.nature === 'règne' ? ' r' : '') + (p.pt ? ' pt' : '');
   b.innerHTML = '<span class="bar"></span><span class="nm">' + esc(p.nom) + '</span>';
   b.title = p.nom + ' · ' + quand(p, true);
-  b.addEventListener('click', () => choisir(p.k, false));
+  b.addEventListener('click', () => sel === p.k && autour == null ? deselect() : choisir(p.k, false));
   b.hidden = true; p.el = b; cv.appendChild(b);
 }
 
@@ -396,7 +396,7 @@ function fiche(p) {
   }
   h += '<p class="source">Noms et versets : Traduction du monde nouveau (2018) ; identification et dates : Étude perspicace des Écritures (wol.jw.org).</p>';
   f.innerHTML = h; f.hidden = false; f.scrollTop = 0;
-  $('#f-x').onclick = () => { f.hidden = true; };
+  $('#f-x').onclick = deselect;
   f.querySelectorAll('.kids button').forEach(b => b.onclick = () => choisir(+b.dataset.k, true));
   const a = $('#aut'); if (a) a.onclick = () => setAutour(autour === p.k ? null : p.k);
 }
@@ -410,6 +410,11 @@ function choisir(k, centrer) {
   fiche(p);
   if (centrer && p.el && !p.el.hidden) montrer(p);
 }
+function deselect() {                 // rien de choisi : plus de liens ni de fiche (« Autour de » reste)
+  if (autour != null) return setAutour(null);
+  sel = null; liens(); fiche(null);
+}
+cv.addEventListener('click', e => { if (sel != null && !e.target.closest('.it')) deselect(); });
 function montrer(p) {
   const r = tl.getBoundingClientRect();
   tl.scrollTo({left: p.px - r.width / 3, top: Math.max(0, TOPPAD + p.lane * ROW - r.height / 3), behavior: 'smooth'});
@@ -496,7 +501,7 @@ q.addEventListener('keydown', e => {
 });
 res.addEventListener('click', e => { const li = e.target.closest('li[data-i]'); if (li) prendre(+li.dataset.i); });
 document.addEventListener('click', e => { if (!e.target.closest('.search')) res.hidden = true; });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#fiche').hidden && document.activeElement !== q) $('#fiche').hidden = true; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.activeElement !== q && (sel != null || autour != null)) deselect(); });
 
 /* ---------- départ ---------- */
 const setHead = () => document.documentElement.style.setProperty('--head-h', $('#top').offsetHeight + 'px');
