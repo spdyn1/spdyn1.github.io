@@ -2,6 +2,8 @@
 
 - `carnet/index.html` : page d'installation de l'appli + liste « À regarder dans le navigateur ».
 - `carnet/Carnet.apk`, `carnet/version.json` : dernière version de l'appli (voir le dépôt carnet).
+- `carnet/editeur.html` : l'éditeur pour l'ordinateur, copié depuis le dépôt privé carnet-desktop
+  par son script `publier` (ne pas le modifier ici).
 - `carnet/pages/` : pages à consulter dans le navigateur ; `carnet/pages.json` en est la liste.
 - `carnet/exemples/` : notes d'exemple de l'appli (menu ⋮ → Notes d'exemple…), une note par `.carnet` ;
   `carnet/exemples.json` en est la liste. Ajouter ou mettre à jour : `./ajouter-exemple note.carnet`
