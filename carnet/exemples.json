@@ -2,10 +2,10 @@
  "exemples": [
   {
    "id": "a8cde5a7-8758-459b-b33f-9cd4f0cfafea",
-   "titre": "Frise biblique",
-   "description": "Chronologie d’Adam au Ier siècle, colorée par période",
-   "fichier": "exemples/frise-biblique.carnet",
-   "modifiée": "2026-10-27T14:53:14.117Z"
+   "titre": "Repères bibliques",
+   "description": "Événements, puissances mondiales et personnages datés, d’Adam au Ier siècle",
+   "fichier": "exemples/reperes-bibliques.carnet",
+   "modifiée": "2026-10-28T22:32:39.628Z"
   },
   {
    "id": "8d56d1c6-0525-4c18-992b-6fdb5f6c2e96",
@@ -20,6 +20,13 @@
    "description": "1 Chroniques 1 – 9 et Esdras, autres noms vérifiés",
    "fichier": "exemples/genealogies-chroniques.carnet",
    "modifiée": "2026-10-27T14:45:45.007Z"
+  },
+  {
+   "id": "5b0f6d3e-2c7a-4e91-9f48-7d1a3c8e6b25",
+   "titre": "Voyages de Paul et de Pierre",
+   "description": "Étapes de chaque voyage avec versets et compagnons, lettres de Paul et de Pierre",
+   "fichier": "exemples/voyages-paul-pierre.carnet",
+   "modifiée": "2026-10-28T22:32:39.648Z"
   }
  ]
 }
