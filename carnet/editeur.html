@@ -78,6 +78,44 @@ mark { background: var(--mk-jaune); color: var(--mk-texte); border-radius: 2px; 
 .pastille { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--overlay0); padding: 0; min-width: 0; cursor: pointer; }
 .pastille.choisie { outline: 3px solid var(--text); outline-offset: 1px; }
 .lvl0 .txt b { font-weight: 850; }
+.proj { color: var(--blue); font-size: 12px; white-space: nowrap; padding: 2px 6px; height: 22px; border: 1px solid currentColor; border-radius: 10px; flex: none; }
+.row.pg { border-top: 2px dashed var(--blue); padding-top: 6px; margin-top: 6px; }
+#projMenu { position: fixed; z-index: 60; display: flex; flex-direction: column; padding: 4px; background: var(--mantle); border: 1px solid var(--surface1); border-radius: 8px; }
+#projMenu[hidden] { display: none; }
+#projMenu button { text-align: left; padding: 6px 12px; border-radius: 6px; }
+#projMenu button.choisi { color: var(--mauve); font-weight: 600; }
+#projMenu small { display: block; color: var(--subtext); font-size: 12px; }
+/* présentation : vue orateur (presentation.js) */
+#orateur { position: fixed; inset: 0; z-index: 40; background: var(--base); display: flex; flex-direction: column; }
+#orateur[hidden] { display: none; }
+#orateur .obar { display: flex; align-items: center; gap: 4px; padding: 8px 16px; border-bottom: 1px solid var(--surface0); flex-wrap: nowrap; }
+#orateur .obar > * { flex-shrink: 0; white-space: nowrap; }
+#orateur .obar button { padding: 6px 10px; }
+#orateur .obar button.on { background: var(--surface1); color: var(--mauve); font-weight: 600; }
+#orateur .obar .primary { background: var(--mauve); color: var(--base); font-weight: 600; }
+#orateur .obar label { font-size: 14px; display: flex; gap: 4px; align-items: center; margin-left: 6px; }
+#orateur .sep { width: 1px; height: 24px; background: var(--surface1); margin: 0 6px; }
+#orateur .grow { flex: 1; }
+#orateur .obar .otitre { flex-shrink: 1; min-width: 4ch; }
+@media (max-width: 1300px) { #orateur .obar .lib { display: none; } }
+@media (max-width: 900px) { #orateur .obar { flex-wrap: wrap; } }
+#orateur .otitre { font-weight: 600; color: var(--mauve); margin: 0 10px; max-width: 30ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#oPas { min-width: 5ch; text-align: center; font-variant-numeric: tabular-nums; }
+#oChrono { font-variant-numeric: tabular-nums; font-weight: 600; }
+#orateur .oetat { padding: 6px 16px; font-size: 14px; color: var(--subtext); border-bottom: 1px solid var(--surface0); }
+#orateur .oliste { flex: 1; overflow: auto; padding: 12px max(16px, calc(50% - 480px)) 40vh; }
+#orateur .oaide { padding: 6px 16px; font-size: 12px; color: var(--subtext); border-top: 1px solid var(--surface0); }
+.orow { display: flex; align-items: flex-start; margin-bottom: 3px; cursor: pointer; }
+.orow .obox { flex: 1; min-width: 0; border-radius: 6px; padding: 6px 10px; border: 2px solid transparent; display: flex; gap: 6px; }
+.orow .obox .txt { flex: 1; }
+.orow.avenir .obox { opacity: .45; }
+.orow.cur .obox { border-color: var(--mauve); }
+.orow.choisi .obox { border-color: var(--blue); }
+.orow .obox { flex-wrap: wrap; }
+.ophotos { flex-basis: 100%; order: 9; }
+.ophotos img { height: 60px; border-radius: 4px; margin: 2px 4px 0 0; }
+.obulle { font-size: 14px; color: var(--subtext); border-left: 2px dashed var(--overlay0); padding: 2px 10px; margin: 0 0 6px; }
+.oligne { color: var(--mauve); font-size: 13px; font-weight: 600; margin: 4px 0 8px 26px; }
 .hidden-count { color: var(--subtext); font-size: 13px; white-space: nowrap; padding-top: 2px; }
 .bulle { color: var(--mauve); font-size: 15px; padding: 0 4px; height: 24px; }
 .ref { color: var(--blue); text-decoration: underline; }
@@ -125,7 +163,7 @@ textarea { width: 100%; min-height: 140px; resize: vertical; }
   box-shadow: 0 4px 16px rgb(0 0 0 / .3); white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; font-size: 14px; }
 kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radius: 4px; padding: 0 5px; font-size: 13px; }
 .help td { padding: 3px 10px 3px 0; vertical-align: top; }
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--base); padding: 10px 18px; border-radius: 10px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90vw; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--base); padding: 10px 18px; border-radius: 10px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90vw; z-index: 100; }
 .toast.show { opacity: 1; }
 </style>
 </head>
@@ -157,12 +195,14 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
     <button id="down" title="Descendre (Alt+↓)">↓</button>
     <button id="color" title="Couleur du paragraphe (Ctrl+K)">🎨</button>
     <button id="comment" title="Info-bulle du paragraphe (Ctrl+Maj+B)">💬</button>
+    <button id="proj" title="Projection : comment ce paragraphe apparaît sur l'écran du public">📽</button>
     <button id="photo" title="Ajouter une photo au paragraphe (on peut aussi la glisser sur le paragraphe)">🖼</button>
     <button id="del" title="Supprimer le paragraphe et ses sous-points (Ctrl+Maj+Suppr)">✕</button>
     <span class="sep"></span>
     <button id="foldAll" title="Tout replier / déplier">⇕</button>
     <button id="byLevel">Colorier par niveau…</button>
     <span class="grow"></span>
+    <button id="present" title="Présenter la note : vue orateur ici, écran du public dans une seconde fenêtre">▶ Présenter</button>
     <button id="helpBtn" title="Raccourcis">?</button>
     <button id="export" class="primary" title="Créer le fichier .carnet à importer dans Carnet (avec les photos)">Exporter pour Carnet</button>
   </div>
@@ -192,6 +232,7 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
 
 <div id="survol"></div>
 <div id="nuancier" hidden></div>
+<div id="projMenu" hidden></div>
 
 <dialog id="levelDlg">
   <h2>Colorier par niveau</h2>
@@ -235,6 +276,8 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
     <tr><td><kbd>Ctrl</kbd>+<kbd>.</kbd></td><td>Replier / déplier</td></tr>
     <tr><td><kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>E</kbd></td><td>Gras / italique / surligné (aussi dans l'info-bulle) ; un mot sélectionné en partie est pris en entier ; ▾ à côté du bouton de surligné : sa couleur (4 au choix, la dernière est gardée)</td></tr>
     <tr><td><kbd>Ctrl</kbd>+<kbd>K</kbd></td><td>Couleur</td></tr>
+    <tr><td>📽</td><td>Projection du paragraphe : avec le précédent, nouvelle page ou vue d'ensemble (écran du public)</td></tr>
+    <tr><td>▶ Présenter</td><td>Vue orateur ; <b>📽 Projeter</b> ouvre l'écran du public (à mettre sur le second écran, double-clic ou F : plein écran). → Espace Page suiv. : paragraphe suivant ; ← Page préc. : précédent ; B : noir ; O : vue d'ensemble (↑ ↓, Entrée : une partie en entier, Échap : retour, + − : niveaux). Les info-bulles restent sur la vue orateur</td></tr>
     <tr><td><kbd>Ctrl</kbd>+<kbd>Maj</kbd>+<kbd>B</kbd></td><td>Ouvrir / refermer l'info-bulle (le texte est gardé ; Échap annule) ; elle s'affiche aussi en survolant 💬</td></tr>
     <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd></td><td>Annuler / rétablir</td></tr>
     <tr><td><kbd>Retour arrière</kbd></td><td>Au début d'un paragraphe : le fusionne avec le précédent</td></tr>
@@ -852,6 +895,14 @@ function render() {
     box.addEventListener("drop", e => { e.preventDefault(); box.classList.remove("drop"); addPhotos(p, [...e.dataTransfer.files]); });
     if (p.id === focusId) showVerses(p);
     if (p.folded && children) { const h = document.createElement("span"); h.className = "hidden-count"; h.textContent = `⋯ ${children}`; box.appendChild(h); }
+    if (PROJECTIONS[p.projection]) {
+      const m = document.createElement("button");
+      m.className = "proj"; m.textContent = PROJECTIONS[p.projection].court; m.tabIndex = -1;
+      m.title = "Projection : " + PROJECTIONS[p.projection].nom;
+      m.onclick = () => { focusId = p.id; menuProjection(m); };
+      box.appendChild(m);
+      if (p.projection === "page") row.classList.add("pg");
+    }
     if (p.comment) {
       const c = document.createElement("button");
       c.className = "bulle"; c.textContent = "💬"; c.tabIndex = -1;
@@ -1065,6 +1116,40 @@ function nuancier(bouton, appliquer) {
 }
 const majSurligneur = () => document.querySelectorAll(".trait").forEach(t => { t.dataset.c = surligneur; });
 document.addEventListener("mousedown", e => { if (!e.target.closest("#nuancier, .ouvreNuancier")) $("#nuancier").hidden = true; });
+
+/** Marqueurs de projection (champ « projection » d'un bloc, comme modele/Projection.kt de Carnet). */
+const PROJECTIONS = Object.assign(Object.create(null), {
+  avec: { nom: "Avec le précédent", court: "avec ↑", aide: "apparaît en même temps que le paragraphe précédent" },
+  page: { nom: "Nouvelle page", court: "nouvelle page", aide: "l'écran se vide et repart de ce paragraphe" },
+  plan: { nom: "Vue d'ensemble", court: "vue d'ensemble", aide: "arrivé ici, l'écran montre le plan de la note" },
+});
+
+/** 📽 ou pastille du paragraphe : choisir son marqueur de projection. */
+function menuProjection(bouton) {
+  const p = current();
+  if (!p) return;
+  const box = $("#projMenu");
+  box.innerHTML = "";
+  for (const [cle, m] of [["", { nom: "Aucun", aide: "apparaît après le précédent, à son tour" }], ...Object.entries(PROJECTIONS)]) {
+    const b = document.createElement("button");
+    b.className = (p.projection || "") === cle ? "choisi" : "";
+    b.innerHTML = `${esc(m.nom)}<small>${esc(m.aide)}</small>`;
+    b.onclick = () => {
+      box.hidden = true;
+      if ((p.projection || "") === cle) return;
+      snapshot(true);
+      if (cle) p.projection = cle; else delete p.projection;
+      render(); save(); rowTxt(p.id)?.focus();
+    };
+    box.appendChild(b);
+  }
+  box.hidden = false;
+  const r = bouton.getBoundingClientRect();
+  box.style.left = Math.min(r.left, innerWidth - box.offsetWidth - 8) + "px";
+  box.style.top = Math.min(r.bottom + 4, innerHeight - box.offsetHeight - 8) + "px";
+}
+document.addEventListener("mousedown", e => { if (!e.target.closest("#projMenu, #proj, .proj")) $("#projMenu").hidden = true; });
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("#projMenu").hidden = true; });
 
 /** Boutons G / I / surligné de la barre : sur le paragraphe en cours. */
 function formerParagraphe(tag) {
@@ -1456,6 +1541,7 @@ function versCarnet(n) {
     return {
       id: p.uid, niveau: p.indent, texte, styles, couleur: nomCouleur(p.color), "replié": !!p.folded,
       infoBulle: bulle && bulle.texte.trim() ? bulle : null, photos: p.images || [],
+      projection: PROJECTIONS[p.projection] ? p.projection : null,
     };
   });
   return {
@@ -1609,6 +1695,7 @@ function depuisCarnet(c) {
     text: depuisStyles(b.texte || "", b.styles || []),
     comment: b.infoBulle?.texte?.trim() ? depuisStyles(b.infoBulle.texte, b.infoBulle.styles || []) : null,
     images: b.photos || [], folded: !!b["replié"],
+    ...(PROJECTIONS[b.projection] ? { projection: b.projection } : {}),
   }));
   return {
     uuid: c.id || uuid(), title: c.titre || "", created: ms(c["créée"]), modified: Date.now(),
@@ -1706,7 +1793,7 @@ async function signalerSynchro() {
 // ---------- Divers ----------
 function toast(msg) {
   const t = $("#toast"); t.textContent = msg; t.classList.add("show");
-  clearTimeout(toast.timer); toast.timer = setTimeout(() => t.classList.remove("show"), 4000);
+  clearTimeout(toast.timer); toast.timer = setTimeout(() => t.classList.remove("show"), Math.max(4000, msg.length * 60));
 }
 const withCurrent = f => () => { const p = current(); if (!p) return toast("Clique d'abord dans un paragraphe"); f(p); };
 
@@ -1752,6 +1839,7 @@ majSurligneur();
   $(id).onclick = () => { const ed = $("#commentText"); if (!ed.contains(getSelection().anchorNode)) ed.focus(); toggleMark(tag, ed); };
 });
 $("#photo").onclick = withCurrent(() => $("#photoFile").click());
+$("#proj").onclick = withCurrent(() => menuProjection($("#proj")));
 $("#photoFile").onchange = e => { const p = current(); if (p) addPhotos(p, [...e.target.files]); e.target.value = ""; };
 $("#byLevel").onclick = colorByLevel;
 $("#export").onclick = exportNote;
@@ -1781,6 +1869,419 @@ document.addEventListener("keydown", e => {
 dark.addEventListener("change", render);
 window.addEventListener("beforeunload", () => { clearTimeout(saveTimer); try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} });
 
+// ---------- Présenter / Projeter : vue orateur ici, écran du public dans une seconde fenêtre ----------
+//
+// Révélation progressive dans l'ordre de la note (replis respectés) : le public voit les paragraphes
+// jusqu'au curseur. Marqueurs (champ « projection ») : « avec » = en même temps que le précédent,
+// « page » = l'écran repart de ce paragraphe, « plan » = arrivé ici, vue d'ensemble.
+// Les info-bulles restent sur la vue orateur (notes d'orateur), jamais projetées.
+
+const Presentation = (() => {
+  const CLE = "carnet-projection";
+  let reglages = { taille: 32, theme: "auto", attenuer: false };
+  try { Object.assign(reglages, JSON.parse(localStorage.getItem(CLE) || "{}")); } catch (e) {}
+  const garder = () => { try { localStorage.setItem(CLE, JSON.stringify(reglages)); } catch (e) {} };
+
+  // cur : id du dernier paragraphe révélé (null = rien, l'écran montre le titre)
+  // mode : « revele », « plan » (vue d'ensemble) ; noir : écran noir par-dessus
+  // zoom : id de la partie montrée en entier depuis la vue d'ensemble ; sel : choisi dans la vue d'ensemble
+  let P = null;
+
+  const vis = () => visible().map(x => x.p);
+  const rang = v => (P.cur == null ? -1 : v.findIndex(p => p.id === P.cur));
+  /** Début du groupe qui finit en i (les « avec » collent au précédent). */
+  const debutGroupe = (v, i) => { while (i > 0 && v[i].projection === "avec") i--; return i; };
+  const groupeAvecPlan = (v, i) => i >= 0 && v.slice(debutGroupe(v, i), i + 1).some(p => p.projection === "plan");
+  /** Fin de la partie qui commence en i (sous-points visibles compris). */
+  const finPartie = (v, i) => { let j = i + 1; while (j < v.length && v[j].indent > v[i].indent) j++; return j; };
+  /** Ancêtres d'un paragraphe (du plus haut au plus proche), dans toute la note. */
+  function ancetres(p) {
+    const a = ps(), out = [];
+    let n = p.indent;
+    for (let i = a.indexOf(p) - 1; i >= 0 && n > 0; i--) if (a[i].indent < n) { out.unshift(a[i]); n = a[i].indent; }
+    return out;
+  }
+
+  function fond(argb, sombre) {
+    if (argb === -1 || argb == null) return "transparent";
+    const r = (argb >> 16) & 255, g = (argb >> 8) & 255, b = argb & 255;
+    if (!sombre) return `rgb(${r} ${g} ${b})`;
+    const m = (a, c) => Math.round(a + (c - a) * 0.3);
+    return `rgb(${m(0x1e, r)} ${m(0x1e, g)} ${m(0x2e, b)})`;
+  }
+  const sombre = () => reglages.theme === "sombre" || (reglages.theme === "auto" && dark.matches);
+
+  // ---------- navigation ----------
+  function aller(i) {
+    const v = vis();
+    P.cur = i >= 0 ? v[i].id : null;
+    P.zoom = null;
+    P.mode = groupeAvecPlan(v, i) ? "plan" : "revele";
+    if (P.mode === "plan") P.sel = P.cur;
+    tout();
+  }
+  function suivant() {
+    if (P.noir) { P.noir = false; return tout(); }
+    const v = vis(), i = rang(v);
+    let j = i + 1;
+    if (j >= v.length) return;
+    while (j + 1 < v.length && v[j + 1].projection === "avec") j++;
+    aller(j);
+  }
+  function precedent() {
+    if (P.noir) { P.noir = false; return tout(); }
+    const v = vis(), i = rang(v);
+    if (i < 0) return;
+    aller(debutGroupe(v, i) - 1);
+  }
+  function basculerPlan() {
+    if (P.mode === "plan") { P.mode = "revele"; P.zoom = null; }
+    else { P.mode = "plan"; P.zoom = null; P.sel = P.cur; P.profondeur = null; }
+    tout();
+  }
+  function echap() {
+    if (P.noir) P.noir = false;
+    else if (P.zoom) P.zoom = null;
+    else if (P.mode === "plan") P.mode = "revele";
+    tout();
+  }
+  function choisir(delta) {
+    const ids = P.affiches || [];
+    if (!ids.length) return;
+    const k = ids.indexOf(P.sel);
+    P.sel = ids[Math.max(0, Math.min(ids.length - 1, (k < 0 ? 0 : k + delta)))];
+    tout();
+  }
+
+  function cle(e) {
+    if (!P || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.target.closest?.("select, input")) return;
+    const k = e.key, plan = P.mode === "plan" && !P.noir;
+    let fait = true;
+    if (plan && !P.zoom && (k === "ArrowDown" || k === "ArrowUp")) choisir(k === "ArrowDown" ? 1 : -1);
+    else if (plan && !P.zoom && k === "Enter") { if (P.sel) { P.zoom = P.sel; tout(); } }
+    else if (["ArrowRight", "ArrowDown", " ", "PageDown", "Enter"].includes(k)) suivant();
+    else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(k)) precedent();
+    else if (k === "b" || k === "B" || k === ".") { P.noir = !P.noir; tout(); }
+    else if (k === "o" || k === "O") basculerPlan();
+    else if (plan && (k === "+" || k === "=" || k === "-")) { P.profondeur = Math.max(0, (P.profondeurVue ?? 0) + (k === "-" ? -1 : 1)); tout(); }
+    else if (k === "Escape") echap();
+    else if (k === "Home") aller(-1);
+    else if (k === "End") aller(vis().length - 1);
+    else if ((k === "f" || k === "F") && P.win && !P.win.closed && e.view === P.win) pleinEcran();
+    else fait = false;
+    if (fait) { e.preventDefault(); e.stopPropagation(); }
+  }
+
+  // ---------- écran du public ----------
+  const STYLE_PUBLIC = `
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+html.clair { --fond: #eff1f5; --texte: #4c4f69; --sub: #6c6f85; --accent: #8839ef;
+  --mk-jaune: color-mix(in srgb, #ffe600 60%, transparent); --mk-vert: color-mix(in srgb, #3ddc84 60%, transparent);
+  --mk-bleu: color-mix(in srgb, #2f8cff 60%, transparent); --mk-rouge: color-mix(in srgb, #f38ba8 60%, transparent); --mk-texte: inherit; }
+html.sombre { --fond: #1e1e2e; --texte: #cdd6f4; --sub: #a6adc8; --accent: #cba6f7;
+  --mk-jaune: #f9e2af; --mk-vert: #a6e3a1; --mk-bleu: #89b4fa; --mk-rouge: #f5c2e7; --mk-texte: #11111b; }
+body { background: var(--fond); color: var(--texte); font: var(--taille)/1.35 system-ui, "Noto Sans", sans-serif; cursor: default; }
+html.noir body { background: #000; }
+html.noir #ecran, html.noir #aide { display: none; }
+#ecran { padding: 4vh 5vw 8vh; }
+.bloc { border-radius: .3em; padding: .2em .55em; margin: .22em 0; overflow-wrap: anywhere; }
+.n0 { font-weight: 600; }
+b { font-weight: 700; }
+mark { background: var(--mk-jaune); color: var(--mk-texte); border-radius: .1em; }
+mark[data-c="vert"] { background: var(--mk-vert); } mark[data-c="bleu"] { background: var(--mk-bleu); } mark[data-c="rouge"] { background: var(--mk-rouge); }
+.photos { display: flex; gap: .4em; flex-wrap: wrap; margin-top: .3em; }
+.photos img { max-height: 45vh; max-width: 100%; border-radius: .25em; }
+.fil { font-size: .6em; color: var(--sub); margin-bottom: .6em; }
+.couverture { min-height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 1.8em; font-weight: 700; }
+.attenuer .bloc:not(.nouveau) { opacity: .45; }
+#ecran.plan .titre { font-size: 1.15em; font-weight: 700; margin-bottom: .5em; color: var(--accent); }
+#ecran.plan .liste { column-gap: 3vw; }
+#ecran.plan .partie { break-inside: avoid; padding-bottom: .2em; }
+.choisi { outline: .12em solid var(--accent); outline-offset: .05em; }
+#aide { position: fixed; right: 12px; bottom: 10px; font: 13px system-ui, sans-serif; color: var(--sub); opacity: .8; }
+:fullscreen #aide { display: none; }
+`;
+
+  async function projeter() {
+    if (P.win && !P.win.closed) { P.win.close(); P.win = null; return tout(); }
+    // ouverte tout de suite (le clic autorise la fenêtre), placée ensuite sur l'autre écran si possible
+    const w = window.open("", "carnet-public", "popup,width=1280,height=720");
+    if (!w) return toast("Fenêtre bloquée par le navigateur : autorise les fenêtres pop-up pour cette page.");
+    P.win = w;
+    const d = w.document;
+    d.open();
+    d.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Carnet — écran du public</title><style>${STYLE_PUBLIC}</style></head>` +
+      `<body><div id="ecran"></div><div id="aide">Double-clic ou F : plein écran · les touches de la présentation marchent aussi ici</div></body></html>`);
+    d.close();
+    d.addEventListener("keydown", cle, true);
+    d.addEventListener("dblclick", pleinEcran);
+    w.addEventListener("pagehide", () => setTimeout(() => { if (P && P.win === w && w.closed) { P.win = null; vueOrateur(); } }, 100));
+    tout();
+    // sinon on déplace la fenêtre à la main : le message dit pourquoi
+    const main = " Glisse-la sur l'autre écran (Windows : Win+Maj+→), puis double-clic.";
+    try {
+      if (!window.getScreenDetails) return toast("Ce navigateur ne sait pas placer la fenêtre." + main);
+      const sd = await getScreenDetails();
+      const autre = sd.screens.find(s => s !== sd.currentScreen);
+      if (!autre) return toast("Le navigateur ne voit qu'un écran." + main);
+      if (w.closed) return;
+      w.moveTo(autre.availLeft, autre.availTop); w.resizeTo(autre.availWidth, autre.availHeight);
+      setTimeout(() => {
+        if (!w.closed && Math.abs(w.screenX - autre.availLeft) > 50)
+          toast(`Le navigateur n'a pas déplacé la fenêtre (${w.screenX},${w.screenY} au lieu de ${autre.availLeft},${autre.availTop}).` + main);
+      }, 500);
+    } catch (e) {
+      toast(`Placement refusé (${e.name}) : autorise « Gestion des fenêtres » (cadenas ou ⓘ de la barre d'adresse).` + main);
+    }
+  }
+  function pleinEcran() {
+    const w = P?.win;
+    if (!w || w.closed) return;
+    const d = w.document;
+    if (d.fullscreenElement) d.exitFullscreen(); else d.documentElement.requestFullscreen().catch(() => {});
+  }
+
+  const photosHtml = p => p.images?.length
+    ? `<div class="photos">${p.images.map(n => `<img data-photo="${esc(n)}" alt="">`).join("")}</div>` : "";
+  function blocHtml(p, base, sombreOn, classe = "") {
+    const marge = Math.max(0, p.indent - base) * 1.3;
+    return `<div class="bloc n${p.indent === 0 ? 0 : 1} ${classe}" data-id="${p.id}" style="margin-left:${marge}em;background:${fond(p.color, sombreOn)}">${p.text || "&nbsp;"}${photosHtml(p)}</div>`;
+  }
+
+  /** Remplit l'écran du public ; rend les ids montrés (pour la sélection de la vue d'ensemble). */
+  function ecranPublic() {
+    const w = P.win;
+    if (!w || w.closed) return;
+    const d = w.document, html = d.documentElement, ecran = d.getElementById("ecran");
+    const s = sombre();
+    html.className = (s ? "sombre" : "clair") + (P.noir ? " noir" : "");
+    html.style.setProperty("--taille", reglages.taille + "px");
+    const v = vis(), i = rang(v);
+    ecran.style.fontSize = "";
+    ecran.className = reglages.attenuer && P.mode === "revele" ? "attenuer" : "";
+    let contenu = "", defiler = null;
+
+    if (P.mode === "plan" && P.zoom && v.some(p => p.id === P.zoom)) {
+      // une partie en entier
+      const z = v.findIndex(p => p.id === P.zoom), fin = finPartie(v, z);
+      const fil = ancetres(v[z]).map(a => esc(plain(a.text))).join(" › ");
+      contenu = (fil ? `<div class="fil">${fil}</div>` : "") + v.slice(z, fin).map(p => blocHtml(p, v[z].indent, s)).join("");
+    } else if (P.mode === "plan") {
+      ecran.classList.add("plan");
+      return vueEnsemble(d, ecran, v.slice(0, i + 1), s);
+    } else if (i < 0) {
+      contenu = `<div class="couverture">${esc(note().title || "")}</div>`;
+    } else {
+      let debut = i;
+      while (debut > 0 && v[debut].projection !== "page") debut--;
+      const base = Math.min(...v.slice(debut, i + 1).map(p => p.indent));
+      const nouveau = debutGroupe(v, i);
+      const fil = v[debut].indent > 0 ? ancetres(v[debut]).map(a => esc(plain(a.text))).join(" › ") : "";
+      contenu = (fil ? `<div class="fil">${fil}</div>` : "") +
+        v.slice(debut, i + 1).map((p, k) => blocHtml(p, base, s, debut + k >= nouveau ? "nouveau" : "")).join("");
+      defiler = v[i].id;
+    }
+    ecran.innerHTML = contenu;
+    remplirPhotos(ecran);
+    P.affiches = null;
+    if (defiler) ecran.querySelector(`[data-id="${defiler}"]`)?.scrollIntoView({ block: "end", behavior: "smooth" });
+    else w.scrollTo(0, 0);
+  }
+
+  /** Plan des parties révélées : profondeur la plus grande qui tient à l'écran, en 1 à 3 colonnes. */
+  function vueEnsemble(d, ecran, montres, s) {
+    const w = P.win;
+    const maxi = Math.max(0, ...montres.map(p => p.indent));
+    const essai = (prof, cols, taille) => {
+      const items = montres.filter(p => p.indent <= prof);
+      ecran.style.fontSize = taille + "px";
+      ecran.innerHTML = `<div class="titre">${esc(note().title || "")}</div><div class="liste" style="columns:${cols}">` +
+        parties(items).map(g => `<div class="partie">${g.map(p => blocHtml(p, 0, s, p.id === P.sel ? "choisi" : "")).join("")}</div>`).join("") + "</div>";
+      return { items, tient: d.documentElement.scrollHeight <= w.innerHeight + 1 };
+    };
+    let res = null, prof = P.profondeur == null ? maxi : Math.min(P.profondeur, maxi);
+    const tailles = [reglages.taille, reglages.taille * 0.85, reglages.taille * 0.7, reglages.taille * 0.6];
+    chercher: for (let p = prof; p >= (P.profondeur == null ? 0 : prof); p--) {
+      for (const t of tailles) for (const c of [1, 2, 3]) {
+        if (t < reglages.taille && P.profondeur == null && p > 0) continue;   // réduire le texte : en dernier recours
+        res = essai(p, c, t);
+        if (res.tient) { prof = p; break chercher; }
+      }
+    }
+    if (!res.tient) res = essai(prof = Math.min(prof, P.profondeur ?? 0), 3, tailles.at(-1));
+    P.profondeurVue = prof;
+    P.affiches = res.items.map(p => p.id);
+    if (P.sel && !P.affiches.includes(P.sel)) {
+      // le choisi est trop profond : on remonte à son ancêtre affiché
+      const p = vis().find(x => x.id === P.sel);
+      const a = p && ancetres(p).reverse().find(x => P.affiches.includes(x.id));
+      if (a) { P.sel = a.id; ecran.querySelector(`[data-id="${a.id}"]`)?.classList.add("choisi"); }
+    }
+    ecran.querySelector(".choisi")?.scrollIntoView({ block: "nearest" });
+  }
+
+  /** Parties de premier niveau : chacune reste d'un tenant dans une colonne. */
+  function parties(items) {
+    const out = [];
+    for (const p of items) if (p.indent === 0 || !out.length) out.push([p]); else out.at(-1).push(p);
+    return out;
+  }
+
+  function remplirPhotos(racine) {
+    racine.querySelectorAll("img[data-photo]").forEach(img => Photos.url(img.dataset.photo).then(u => { if (u) img.src = u; else img.remove(); }));
+  }
+
+  // ---------- vue orateur ----------
+  function construire() {
+    const o = document.createElement("div");
+    o.id = "orateur";
+    o.innerHTML = `
+<div class="obar">
+  <button id="oQuitter" title="Quitter la présentation">✕</button>
+  <span class="otitre"></span>
+  <button id="oPrec" title="Précédent (←, Page préc.)">◀</button><span id="oPas"></span><button id="oSuiv" title="Suivant (→, Espace, Page suiv.)">▶</button>
+  <span class="sep"></span>
+  <button id="oProjeter" class="primary"></button>
+  <button id="oPlan" title="Vue d'ensemble (O)">▦<span class="lib"> Vue d'ensemble</span></button>
+  <button id="oNoir" title="Écran noir (B)">■<span class="lib"> Noir</span></button>
+  <span class="sep"></span>
+  <button id="oMoins" title="Texte du public plus petit">A−</button><button id="oPlus" title="Texte du public plus grand">A+</button>
+  <select id="oTheme" title="Thème de l'écran du public"><option value="auto">Thème éditeur</option><option value="clair">Clair</option><option value="sombre">Sombre</option></select>
+  <label title="Les paragraphes déjà vus sont atténués sur l'écran du public"><input type="checkbox" id="oAttenuer"> Atténuer<span class="lib"> les précédents</span></label>
+  <span class="grow"></span>
+  <button id="oChrono" title="Temps écoulé (cliquer : remettre à zéro)">0:00</button>
+</div>
+<div class="oetat"></div>
+<div class="oliste"></div>
+<div class="oaide">→ Espace Page suiv. : suivant · ← Page préc. : précédent · Début / Fin · B : noir · O : vue d'ensemble (↑ ↓ choisir, Entrée : la partie en entier, Échap : retour, + − : niveaux) · clic : aller à ce paragraphe</div>`;
+    document.body.appendChild(o);
+    $("#oQuitter").onclick = quitter;
+    $("#oPrec").onclick = precedent;
+    $("#oSuiv").onclick = suivant;
+    $("#oProjeter").onclick = projeter;
+    $("#oPlan").onclick = basculerPlan;
+    $("#oNoir").onclick = () => { P.noir = !P.noir; tout(); };
+    $("#oMoins").onclick = () => { reglages.taille = Math.max(16, reglages.taille - 4); garder(); tout(); };
+    $("#oPlus").onclick = () => { reglages.taille = Math.min(96, reglages.taille + 4); garder(); tout(); };
+    $("#oTheme").onchange = e => { reglages.theme = e.target.value; garder(); tout(); };
+    $("#oAttenuer").onchange = e => { reglages.attenuer = e.target.checked; garder(); tout(); };
+    $("#oChrono").onclick = () => { P.t0 = Date.now(); chrono(); };
+    // les boutons ne gardent pas le focus : Espace / Entrée restent aux touches de la présentation
+    o.querySelectorAll("button").forEach(b => b.addEventListener("mousedown", e => e.preventDefault()));
+    return o;
+  }
+
+  function vueOrateur() {
+    const o = $("#orateur");
+    const v = vis(), i = rang(v), n = note();
+    o.querySelector(".otitre").textContent = n.title || "Sans titre";
+    $("#oPas").textContent = `${i + 1} / ${v.length}`;
+    $("#oPrec").disabled = i < 0;
+    $("#oSuiv").disabled = i >= v.length - 1;
+    const ouverte = P.win && !P.win.closed;
+    $("#oProjeter").textContent = ouverte ? "📽 Fermer l'écran" : "📽 Projeter";
+    $("#oProjeter").title = ouverte ? "Fermer la fenêtre du public" : "Ouvrir l'écran du public dans une fenêtre (placée sur le second écran si le navigateur le permet)";
+    $("#oPlan").classList.toggle("on", P.mode === "plan");
+    $("#oNoir").classList.toggle("on", !!P.noir);
+    $("#oTheme").value = reglages.theme;
+    $("#oAttenuer").checked = !!reglages.attenuer;
+    const zp = P.zoom && v.find(p => p.id === P.zoom);
+    o.querySelector(".oetat").textContent = "Écran du public" + (ouverte ? "" : " (fenêtre fermée)") + " : " + (
+      P.noir ? "noir" : zp ? `la partie « ${plain(zp.text).slice(0, 60)} »` :
+      P.mode === "plan" ? `vue d'ensemble, ${(P.profondeurVue ?? 0) + 1} niveau${P.profondeurVue ? "x" : ""}` :
+      i < 0 ? "titre de la note" : "révélation");
+
+    const liste = o.querySelector(".oliste");
+    liste.innerHTML = "";
+    const items = visible();
+    items.forEach(({ p, children }, k) => {
+      const row = document.createElement("div");
+      row.className = "orow" + (k > i ? " avenir" : "") + (k === i ? " cur" : "") + (P.mode === "plan" && p.id === P.sel ? " choisi" : "");
+      row.style.paddingLeft = (p.indent * 22) + "px";
+      const pli = document.createElement("button");
+      pli.className = "fold" + (children ? "" : " leaf");
+      pli.textContent = p.folded ? "▶" : "▼";
+      pli.onclick = e => { e.stopPropagation(); replier(p); };
+      const box = document.createElement("div");
+      box.className = "obox";
+      box.style.background = bg(p.color);
+      const t = document.createElement("div");
+      t.className = "txt";
+      t.innerHTML = p.text || "&nbsp;";
+      markRefs(t);
+      box.appendChild(t);
+      if (PROJECTIONS[p.projection]) {
+        const m = document.createElement("span");
+        m.className = "proj"; m.textContent = PROJECTIONS[p.projection].court;
+        box.appendChild(m);
+      }
+      if (p.folded && children) { const h = document.createElement("span"); h.className = "hidden-count"; h.textContent = `⋯ ${children}`; box.appendChild(h); }
+      row.append(pli, box);
+      if (p.images?.length) { const ph = document.createElement("div"); ph.className = "ophotos"; ph.innerHTML = photosHtml(p); remplirPhotos(ph); box.appendChild(ph); }
+      if (p.comment) {
+        const c = document.createElement("div");
+        c.className = "obulle"; c.innerHTML = "💬 " + p.comment;
+        c.style.marginLeft = (p.indent * 22 + 26) + "px";
+        liste.append(row, c);
+      } else liste.appendChild(row);
+      row.onclick = () => {
+        if (P.mode === "plan" && k <= i) { P.sel = P.zoom = p.id; tout(); }
+        else aller(k);
+      };
+      if (k === i) {
+        const l = document.createElement("div");
+        l.className = "oligne"; l.textContent = "▲ le public voit jusqu'ici";
+        liste.appendChild(l);
+      }
+    });
+    if (i < 0) { const l = document.createElement("div"); l.className = "oligne"; l.textContent = "Le public voit le titre de la note — → pour commencer"; liste.prepend(l); }
+    (liste.querySelector(".orow.choisi") || liste.querySelector(".oligne"))?.scrollIntoView({ block: "center" });
+  }
+
+  function replier(p) {
+    p.folded = !p.folded;
+    save();
+    const v = vis();
+    if (P.cur != null && !v.some(x => x.id === P.cur)) P.cur = p.id;   // le curseur était dans la partie repliée
+    if (P.zoom && !v.some(x => x.id === P.zoom)) P.zoom = null;
+    render();
+    tout();
+  }
+
+  function chrono() {
+    if (!P) return;
+    const s = Math.floor((Date.now() - P.t0) / 1000);
+    $("#oChrono").textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  }
+
+  function tout() { if (!P) return; ecranPublic(); vueOrateur(); }
+
+  function demarrer() {
+    if (P) return;
+    document.activeElement?.blur?.();
+    P = { cur: null, mode: "revele", noir: false, zoom: null, sel: null, profondeur: null, win: null, t0: Date.now() };
+    ($("#orateur") || construire()).hidden = false;
+    P.tic = setInterval(chrono, 1000);
+    document.addEventListener("keydown", cle, true);
+    tout();
+  }
+  function quitter() {
+    if (!P) return;
+    if (P.win && !P.win.closed) P.win.close();
+    clearInterval(P.tic);
+    document.removeEventListener("keydown", cle, true);
+    P = null;
+    $("#orateur").hidden = true;
+    render();
+  }
+  dark.addEventListener("change", () => tout());
+
+  return { demarrer, quitter, get actif() { return !!P; }, get etat() { return P; } };
+})();
+
+$("#present").onclick = () => Presentation.demarrer();
 if (!note()) { if (store.notes.length) store.current = store.notes[0].uuid; else newNote(); }
 render(); renderSide();
 if (!note().title) $("#title").focus();
