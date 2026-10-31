@@ -2045,9 +2045,9 @@ mark[data-c="vert"] { background: var(--mk-vert); } mark[data-c="bleu"] { backgr
 
   const photosHtml = p => p.images?.length
     ? `<div class="photos">${p.images.map(n => `<img data-photo="${esc(n)}" alt="">`).join("")}</div>` : "";
-  function blocHtml(p, base, sombreOn, classe = "") {
+  function blocHtml(p, base, sombreOn, classe = "", photos = true) {
     const marge = Math.max(0, p.indent - base) * 1.3;
-    return `<div class="bloc n${p.indent === 0 ? 0 : 1} ${classe}" data-id="${p.id}" style="margin-left:${marge}em;background:${fond(p.color, sombreOn)}">${p.text || "&nbsp;"}${photosHtml(p)}</div>`;
+    return `<div class="bloc n${p.indent === 0 ? 0 : 1} ${classe}" data-id="${p.id}" style="margin-left:${marge}em;background:${fond(p.color, sombreOn)}">${p.text || "&nbsp;"}${photos ? photosHtml(p) : ""}</div>`;
   }
 
   /** Remplit l'écran du public ; rend les ids montrés (pour la sélection de la vue d'ensemble). */
@@ -2084,10 +2084,16 @@ mark[data-c="vert"] { background: var(--mk-vert); } mark[data-c="bleu"] { backgr
       defiler = v[i].id;
     }
     ecran.innerHTML = contenu;
-    remplirPhotos(ecran);
     P.affiches = null;
-    if (defiler) ecran.querySelector(`[data-id="${defiler}"]`)?.scrollIntoView({ block: "end", behavior: "smooth" });
-    else w.scrollTo(0, 0);
+    // le dernier bloc arrivé en bas de l'écran ; refait quand une photo arrive (elle allonge la page)
+    const bas = (doux) => {
+      const el = defiler && ecran.querySelector(`[data-id="${defiler}"]`);
+      if (!el) return w.scrollTo(0, 0);
+      const y = el.getBoundingClientRect().bottom + w.scrollY - w.innerHeight + 0.08 * w.innerHeight;
+      w.scrollTo({ top: Math.max(0, y), behavior: doux ? "smooth" : "instant" });
+    };
+    remplirPhotos(ecran, () => bas(false));
+    bas(true);
   }
 
   /** Plan des parties révélées : profondeur la plus grande qui tient à l'écran, en 1 à 3 colonnes. */
@@ -2098,7 +2104,7 @@ mark[data-c="vert"] { background: var(--mk-vert); } mark[data-c="bleu"] { backgr
       const items = montres.filter(p => p.indent <= prof);
       ecran.style.fontSize = taille + "px";
       ecran.innerHTML = `<div class="titre">${esc(note().title || "")}</div><div class="liste" style="columns:${cols}">` +
-        parties(items).map(g => `<div class="partie">${g.map(p => blocHtml(p, 0, s, p.id === P.sel ? "choisi" : "")).join("")}</div>`).join("") + "</div>";
+        parties(items).map(g => `<div class="partie">${g.map(p => blocHtml(p, 0, s, p.id === P.sel ? "choisi" : "", false)).join("")}</div>`).join("") + "</div>";
       return { items, tient: d.documentElement.scrollHeight <= w.innerHeight + 1 };
     };
     let res = null, prof = P.profondeur == null ? maxi : Math.min(P.profondeur, maxi);
@@ -2129,8 +2135,11 @@ mark[data-c="vert"] { background: var(--mk-vert); } mark[data-c="bleu"] { backgr
     return out;
   }
 
-  function remplirPhotos(racine) {
-    racine.querySelectorAll("img[data-photo]").forEach(img => Photos.url(img.dataset.photo).then(u => { if (u) img.src = u; else img.remove(); }));
+  function remplirPhotos(racine, chargee) {
+    racine.querySelectorAll("img[data-photo]").forEach(img => {
+      if (chargee) img.addEventListener("load", chargee, { once: true });
+      Photos.url(img.dataset.photo).then(u => { if (u) img.src = u; else img.remove(); });
+    });
   }
 
   // ---------- vue orateur ----------
