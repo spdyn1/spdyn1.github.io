@@ -177,6 +177,7 @@ mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
 .choix .pc button{color:var(--muted)}
 .choix button{border:0;background:none;cursor:pointer;color:inherit;padding:0 6px;font-size:14px}
 .choix i{color:var(--muted)}
+.choix .dep{color:var(--accent);font-size:13px}
 .it.choisi .nm{outline:2px solid var(--accent);border-radius:3px}
 .it.choisi .nm::after{content:" ✓";color:var(--accent);font-weight:700}
 .btn.or:hover,.btn.or[aria-pressed="true"]{background:var(--gold);color:var(--surface)}
@@ -368,7 +369,7 @@ body.plein .tools{margin-left:auto;width:auto;flex:1 1 auto}
   <ul>
     <li>Touchez un nom : sa fiche et ses liens familiaux. Touchez le fond (ou Échap) pour revenir.</li>
     <li>Fiche : famille et <b>interactions</b> (rencontres, conflits, onctions, prophéties…, avec le verset) ; sur la frise, courbes <span style="color:var(--accent)">rouges</span> = famille, <span style="color:var(--alias)">bleu-vert</span> = interactions. Elles ont été écrites par Claude d'après les versets cités ; « à relire » (et courbe en pointillé) = pas encore vérifiée.</li>
-    <li><b>＋ Sélection</b> : touchez les personnes à garder (ou cherchez-les), puis touchez à nouveau « ＋ Sélection » : la frise n’affiche plus qu’elles. × retire une personne, ✕ vide la sélection. Elle est gardée, et l’adresse de la page la contient : copiez-la pour l’envoyer ou la mettre en favori.</li>
+    <li><b>＋ Sélection</b> : touchez les personnes à garder (ou cherchez-les), puis touchez à nouveau « ＋ Sélection » : la frise n’affiche plus qu’elles. × retire une personne, ✕ vide la sélection. Dans la fiche, « ＋ Ajouter l’entourage à la sélection » y ajoute d’un coup sa famille et les personnes avec qui elle a agi. Elle est gardée, et l’adresse de la page la contient : copiez-la pour l’envoyer ou la mettre en favori.</li>
     <li>« Autour de… » dans la fiche : seulement sa famille et les personnes avec qui elle a agi. « Arbre de… » : son arbre.</li>
     <li>Se déplacer : glisser (doigt, ou deux doigts sur le pavé tactile). Zoom : − et +, Ctrl + molette, ou pincer (écran ou pavé tactile).</li>
     <li>⛶ : plein écran. « Fiches » : afficher ou non la fiche.</li>
@@ -460,7 +461,7 @@ const vUrl = r => { const m = r.match(/^(\S+) (\d+)(?::(\d+))?/);         // « 
 
 /* ---------- état ---------- */
 let ppy = 1, mode = 'ess', sel = null, selEv = null, autour = null, lig = false, fiches = true;
-let choix = [], ajout = false;      // « ＋ Sélection » : personnes choisies ; ajout = on est en train de les choisir
+let choix = [], ajout = false, deplie = false;      // « ＋ Sélection » : personnes choisies ; ajout = on est en train de les choisir
 const filtre = () => choix.length > 0 && !ajout && !lig && autour == null;
 try { fiches = localStorage.getItem('personnages-fiches') !== 'non'; } catch (e) {}
 const tl = $('#tl'), cv = $('#cv'), axis = $('#axis');
@@ -542,7 +543,8 @@ function layout() {
     }
   } else y += placer(visibles().sort(parDate), y, on) * ROW;
   const W = X(Y1), H = Math.max(y, TOPPAD + 4 * ROW) + 40;
-  cv.style.width = W + 'px'; cv.style.height = H + 'px'; axis.style.width = W + 'px';
+  const MD = 440;                     // marge à droite : le Ier siècle peut sortir de sous la fiche
+  cv.style.width = (W + MD) + 'px'; cv.style.height = H + 'px'; axis.style.width = (W + MD) + 'px';
   for (const g of grpEls.values()) g.style.width = W + 'px';
   svg.setAttribute('width', W); svg.setAttribute('height', H);
   for (const p of ALL) {
@@ -664,7 +666,8 @@ function fiche(p) {
   }
   if (quiVoy.has(p.k) && mode !== 'car') h += '<button class="aut" id="voy-b">Ses déplacements sur la carte</button> ';
   if ((fam || p.inter.length) && mode !== 'arb' && mode !== 'car')
-    h += '<button class="aut" id="aut">' + (autour === p.k ? 'Revenir à toute la frise' : 'Autour de ' + esc(p.nom)) + '</button> ';
+    h += '<button class="aut" id="aut">' + (autour === p.k ? 'Revenir à toute la frise' : 'Autour de ' + esc(p.nom)) + '</button> '
+      + '<button class="aut" id="ent-b" title="Sa famille et les personnes avec qui elle a agi, comme « Autour de »">＋ Ajouter l’entourage à la sélection</button> ';
   if (fam && mode !== 'arb' && mode !== 'car') h += '<button class="aut" id="arb-b">Arbre de ' + esc(p.nom) + '</button>';
   if ((mode === 'arb' || mode === 'car') && p.date) h += '<button class="aut" id="vfr">Voir ' + esc(p.nom) + ' sur la frise</button>';
   const txt = p.vv.filter(r => DATA.V[r]);
@@ -681,6 +684,7 @@ function fiche(p) {
   $('#f-x').onclick = deselect;
   f.querySelectorAll('.kids button, .inter button').forEach(b => b.onclick = () => choisir(+b.dataset.k, true));
   const a = $('#aut'); if (a) a.onclick = () => setAutour(autour === p.k ? null : p.k);
+  const en = $('#ent-b'); if (en) en.onclick = () => ajouterEntourage(p.k);
   const ab = $('#arb-b'); if (ab) ab.onclick = () => { sel = p.k; setMode('arb'); };
   const vy = $('#voy-b'); if (vy) vy.onclick = () => { cQui = p.k; cVoy = null; cSel = null; setMode('car'); };
   const vf = $('#vfr'); if (vf) vf.onclick = () => { setMode('ess'); choisir(p.k, true); };
@@ -789,10 +793,13 @@ function majChoix() {
   $('#choix-b').textContent = ajout ? '✓ Afficher la sélection' : '＋ Sélection';
   const bar = $('#choix'), avant = bar.hidden;
   bar.hidden = !frise || lig || autour != null || !(ajout || choix.length);
-  $('#choix-l').innerHTML = choix.map(k => '<span class="pc">' + esc(P[k].nom)
-    + '<button data-k="' + k + '" aria-label="Retirer ' + esc(P[k].nom) + '">×</button></span>').join(' ');
+  const puce = k => '<span class="pc">' + esc(P[k].nom) + '<button data-k="' + k + '" aria-label="Retirer ' + esc(P[k].nom) + '">×</button></span>';
+  const long = choix.length > 8;      // beaucoup de noms : bandeau replié
+  $('#choix-l').innerHTML = (long && !deplie ? choix.slice(0, 5) : choix).map(puce).join(' ')
+    + (long ? ' <button class="dep" aria-expanded="' + deplie + '">' + (deplie ? '▴ replier' : '… et ' + (choix.length - 5) + ' autres ▾') + '</button>' : '');
   $('#choix-i').textContent = ajout ? (choix.length ? ' Touchez d’autres personnes, ou cherchez-les' : 'Touchez les personnes à garder, ou cherchez-les') : '';
-  $('#choix-l').querySelectorAll('button').forEach(b => b.onclick = () => basculer(+b.dataset.k));
+  $('#choix-l').querySelectorAll('button[data-k]').forEach(b => b.onclick = () => basculer(+b.dataset.k));
+  const dp = $('#choix-l .dep'); if (dp) dp.onclick = () => { deplie = !deplie; majChoix(); };
   if (avant !== bar.hidden || !bar.hidden) setHead();
   garderChoix();
 }
@@ -826,6 +833,18 @@ function basculer(k) {               // ajouter ou retirer une personne de la s�
   majChoix();
   if (ajout) { if (p.el) p.el.classList.toggle('choisi', i < 0); return; }
   const c = centreAnnee(); layout(); allerA(c);
+}
+function ajouterEntourage(k) {      // l'entourage de « Autour de » (2 cercles) rejoint la sélection
+  const n = choix.length;
+  for (const q of voisins(k, 2).keys()) if ((P[q].date || P[q].interp) && !choix.includes(q)) choix.push(q);
+  autour = null; lig = false; $('#focus').hidden = true;
+  const c = centreAnnee();
+  majLig(); layout();
+  allerA(c);
+  const m = choix.length - n;
+  $('#choix-i').textContent = ' ' + (m ? '+ ' + m + (m > 1 ? ' personnes' : ' personne') : 'déjà toutes dans la sélection');
+  if (sel != null) fiche(P[sel]);
+  if (P[k].el && !P[k].el.hidden) cadrer(P[k]);
 }
 function setAjout(on) {
   if (mode === 'arb' || mode === 'car') return;
