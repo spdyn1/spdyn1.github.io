@@ -1,1 +1,1 @@
-{"versionCode": 119, "versionName": "1.0.19", "notes": "Corrige un écran vide qui pouvait rester après deux appuis rapides sur la flèche retour. La prochaine mise à jour ouvrira directement l'installeur d'Android.", "apk": "Carnet.apk", "sha256": "fbbaca536064116c9a2a5d4a3b0a8d66d4d553981a394425bac78ab39d475335"}
+{"versionCode": 121, "versionName": "1.0.21", "notes": "Petites améliorations internes : rien ne change dans l'utilisation de Carnet.", "apk": "Carnet.apk", "sha256": "ba717d5681b63076bc3174145db21cf6a475376be8d126ca722f36f71b51fc5b"}
