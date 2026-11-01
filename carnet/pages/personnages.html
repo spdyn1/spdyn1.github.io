@@ -170,6 +170,15 @@ mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
 .source{font-size:12px;color:var(--muted);margin-top:16px}
 /* ---------- lignée de Jésus (ligne dorée) ---------- */
 .btn.or{border-color:var(--gold);color:var(--gold);font-weight:500;white-space:nowrap}
+.btn.ch[aria-pressed="true"],.btn.ch:hover{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.btn.ch{border-color:var(--accent);color:var(--accent);white-space:nowrap}
+.choix{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px;border:1px solid var(--accent);color:var(--accent);border-radius:14px;padding:2px 4px 2px 10px;font-size:13px;max-width:100%}
+.choix .pc{display:inline-flex;align-items:center;border-radius:999px;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--ink);padding:0 0 0 8px;font-family:var(--f-name);font-size:14.5px}
+.choix .pc button{color:var(--muted)}
+.choix button{border:0;background:none;cursor:pointer;color:inherit;padding:0 6px;font-size:14px}
+.choix i{color:var(--muted)}
+.it.choisi .nm{outline:2px solid var(--accent);border-radius:3px}
+.it.choisi .nm::after{content:" ✓";color:var(--accent);font-weight:700}
 .btn.or:hover,.btn.or[aria-pressed="true"]{background:var(--gold);color:var(--surface)}
 .it.lig .nm::before{content:"✦";color:var(--gold);font-size:11px;margin-right:3px;vertical-align:1px}
 .canvas.or .it.lig .nm{color:var(--gold);font-weight:700}
@@ -308,6 +317,8 @@ body.plein .tools{margin-left:auto;width:auto;flex:1 1 auto}
       <button class="tab" role="tab" id="m-car" aria-selected="false">Carte</button>
     </div>
     <button class="btn or" id="lig-b" aria-pressed="false" title="Lignée de Jésus, d’Adam à Jésus">✦ <span class="long">Lignée de </span>Jésus</button>
+    <button class="btn ch" id="choix-b" aria-pressed="false" title="Choisir les personnes à afficher, à l’exclusion des autres">＋ Sélection</button>
+    <span class="choix" id="choix" hidden><span id="choix-l"></span><i id="choix-i"></i><button id="choix-x" aria-label="Vider la sélection" title="Vider la sélection">✕</button></span>
     <span class="focus" id="focus" hidden><span id="focus-t">Autour de</span> <b id="focus-nm"></b><button id="focus-x" aria-label="Quitter ce mode">✕</button></span>
     <div class="tools">
       <div class="search">
@@ -357,6 +368,7 @@ body.plein .tools{margin-left:auto;width:auto;flex:1 1 auto}
   <ul>
     <li>Touchez un nom : sa fiche et ses liens familiaux. Touchez le fond (ou Échap) pour revenir.</li>
     <li>Fiche : famille et <b>interactions</b> (rencontres, conflits, onctions, prophéties…, avec le verset) ; sur la frise, courbes <span style="color:var(--accent)">rouges</span> = famille, <span style="color:var(--alias)">bleu-vert</span> = interactions. Elles ont été écrites par Claude d'après les versets cités ; « à relire » (et courbe en pointillé) = pas encore vérifiée.</li>
+    <li><b>＋ Sélection</b> : touchez les personnes à garder (ou cherchez-les), puis touchez à nouveau « ＋ Sélection » : la frise n’affiche plus qu’elles. × retire une personne, ✕ vide la sélection. Elle est gardée, et l’adresse de la page la contient : copiez-la pour l’envoyer ou la mettre en favori.</li>
     <li>« Autour de… » dans la fiche : seulement sa famille et les personnes avec qui elle a agi. « Arbre de… » : son arbre.</li>
     <li>Se déplacer : glisser (doigt, ou deux doigts sur le pavé tactile). Zoom : − et +, Ctrl + molette, ou pincer (écran ou pavé tactile).</li>
     <li>⛶ : plein écran. « Fiches » : afficher ou non la fiche.</li>
@@ -448,6 +460,8 @@ const vUrl = r => { const m = r.match(/^(\S+) (\d+)(?::(\d+))?/);         // « 
 
 /* ---------- état ---------- */
 let ppy = 1, mode = 'ess', sel = null, selEv = null, autour = null, lig = false, fiches = true;
+let choix = [], ajout = false;      // « ＋ Sélection » : personnes choisies ; ajout = on est en train de les choisir
+const filtre = () => choix.length > 0 && !ajout && !lig && autour == null;
 try { fiches = localStorage.getItem('personnages-fiches') !== 'non'; } catch (e) {}
 const tl = $('#tl'), cv = $('#cv'), axis = $('#axis');
 
@@ -464,6 +478,7 @@ function voisins(k, prof) {           // entourage familial jusqu'à « prof » 
 function visibles() {
   if (lig) return P.filter(p => p.lig && (p.date || p.interp));
   if (autour != null) return dated.filter(p => voisins(autour, 2).has(p.k));
+  if (filtre()) return [...dated, ...interp].filter(p => choix.includes(p.k) || p.k === sel);
   return mode === 'ess' ? dated.filter(p => essentiel.has(p.k) || p.k === sel) : dated;
 }
 
@@ -475,7 +490,7 @@ for (const p of [...dated, ...interp]) {
   b.className = 'it ' + (p.interp ? 'g' : p.c) + (p.nature === 'règne' ? ' r' : '') + (p.pt ? ' pt' : '') + (p.lig ? ' lig' : '');
   b.innerHTML = '<span class="bar"></span><span class="nm">' + esc(p.nom) + '</span>';
   b.title = p.nom + ' · ' + quand(p, true);
-  b.addEventListener('click', () => { if (sel === p.k && autour == null) deselect(); else { choisir(p.k, false); cadrer(p); } });
+  b.addEventListener('click', () => { if (ajout) basculer(p.k); else if (sel === p.k && autour == null) deselect(); else { choisir(p.k, false); cadrer(p); } });
   b.hidden = true; p.el = b; cv.appendChild(b);
 }
 for (const e of EV) {
@@ -516,7 +531,7 @@ function layout() {
       const el = grpEls.get(g); el.hidden = false; el.style.top = y + 'px'; y += 20;
       y += placer(list.sort(parDate), y, on) * ROW + 14;
     }
-  } else if (mode === 'rep' && autour == null) {
+  } else if (mode === 'rep' && autour == null && !filtre()) {
     const par = new Map();
     for (const p of [...EV, ...reperes]) { if (!par.has(p.grp)) par.set(p.grp, []); par.get(p.grp).push(p); }
     if (sel != null && P[sel].date && !P[sel].grp) par.set('_sel', [P[sel]]);
@@ -532,6 +547,7 @@ function layout() {
   svg.setAttribute('width', W); svg.setAttribute('height', H);
   for (const p of ALL) {
     const v = on.has(p); p.el.hidden = !v; if (!v) continue;
+    p.el.classList.toggle('choisi', ajout && choix.includes(p.k));
     const s = p.el.style;
     s.left = p.px + 'px'; s.top = p.top + 'px';
     p.el.querySelector('.bar').style.width = p.pw + 'px';
@@ -688,7 +704,8 @@ function choisir(k, centrer) {
   const p = P[k];
   if (mode === 'arb') { arbre(k); fiche(p); return; }
   if (mode === 'car') { const avant = $('#fiche').hidden; fiche(p); if (avant && !$('#fiche').hidden) { cAjuster(); cDessiner(); } return; }
-  if (p.date && autour == null && ((mode === 'ess' && !essentiel.has(k)) || (mode === 'rep' && !p.grp))) layout(); else liens();
+  if (filtre() ? (p.date || p.interp) && !choix.includes(k)
+      : p.date && autour == null && ((mode === 'ess' && !essentiel.has(k)) || (mode === 'rep' && !p.grp))) layout(); else liens();
   if (autour != null && p.date && !voisins(autour, 2).has(k)) setAutour(null);
   if (lig && !p.lig && p.date) { lig = false; majLig(); layout(); }
   fiche(p);
@@ -697,9 +714,10 @@ function choisir(k, centrer) {
 function deselect() {                 // rien de choisi : plus de liens ni de fiche (« Autour de » reste)
   if (autour != null) return setAutour(null);
   if (sel == null && !selEv && lig) return setLig(false);
+  if (sel == null && !selEv && ajout) return setAjout(false);
   const avant = sel; sel = null; selEv = null;
   if (mode === 'arb' || mode === 'car') return fiche(null);
-  if (mode === 'rep' && avant != null && !P[avant].grp) layout(); else liens();
+  if (filtre() ? avant != null && !choix.includes(avant) : mode === 'rep' && avant != null && !P[avant].grp) layout(); else liens();
   fiche(null);
 }
 function choisirEv(e) { sel = null; selEv = e; liens(); ficheEv(e); }
@@ -743,6 +761,7 @@ function majLig() {                  // bouton et pastille « Lignée de Jésus 
   $('#lig-b').setAttribute('aria-pressed', lig);
   $('#lig-b').title = lig ? 'Quitter la lignée de Jésus' : 'Lignée de Jésus, d’Adam à Jésus';
   if (lig) $('#focus').hidden = true;
+  majChoix();
 }
 function setLig(on) {
   if (mode === 'arb') { if (on) { sel = JESUS; arbre(JESUS); fiche(null); } return; }
@@ -762,6 +781,62 @@ function setAutour(k) {
   if (sel != null) fiche(P[sel]);
 }
 $('#focus-x').onclick = () => setAutour(null);
+/* ---------- « ＋ Sélection » : n'afficher que les personnes choisies ---------- */
+function majChoix() {
+  const frise = mode !== 'arb' && mode !== 'car';
+  $('#choix-b').hidden = !frise;
+  $('#choix-b').setAttribute('aria-pressed', ajout);
+  $('#choix-b').textContent = ajout ? '✓ Afficher la sélection' : '＋ Sélection';
+  const bar = $('#choix'), avant = bar.hidden;
+  bar.hidden = !frise || lig || autour != null || !(ajout || choix.length);
+  $('#choix-l').innerHTML = choix.map(k => '<span class="pc">' + esc(P[k].nom)
+    + '<button data-k="' + k + '" aria-label="Retirer ' + esc(P[k].nom) + '">×</button></span>').join(' ');
+  $('#choix-i').textContent = ajout ? (choix.length ? ' Touchez d’autres personnes, ou cherchez-les' : 'Touchez les personnes à garder, ou cherchez-les') : '';
+  $('#choix-l').querySelectorAll('button').forEach(b => b.onclick = () => basculer(+b.dataset.k));
+  if (avant !== bar.hidden || !bar.hidden) setHead();
+  garderChoix();
+}
+// mémoire et adresse : #sel=4681.21,12 (docId d'Étude perspicace − 1200000000, « .n » = entrée n)
+const codeP = p => { const [d, n] = p.id.split('-'); return (+d - 1200000000) + (n !== '0' ? '.' + n : ''); };
+const parCode = new Map(P.map(p => [codeP(p), p.k]));
+const lireChoix = t => [...new Set((t || '').split(',').map(x => parCode.get(x)))].filter(k => k != null && (P[k].date || P[k].interp));
+function garderChoix() {
+  const c = choix.map(k => codeP(P[k])).join(',');
+  try { localStorage.setItem('personnages-selection', c); } catch (e) {}
+  if (location.hash !== (c ? '#sel=' + c : '')) history.replaceState(null, '', c ? '#sel=' + c : location.pathname + location.search);
+}
+function voirChoix() {               // montrer la sélection : à partir de la plus ancienne
+  const vus = choix.map(k => P[k]).filter(p => p.el && !p.el.hidden);
+  if (!vus.length) return false;
+  tl.scrollTo({left: Math.max(0, Math.min(...vus.map(p => p.px)) - 40), top: 0});
+  return true;
+}
+const selAdresse = () => { const m = location.hash.match(/^#sel=([\d.,]*)$/); return m ? m[1] : null; };
+addEventListener('hashchange', () => {
+  const t = selAdresse(); if (t == null) return;
+  choix = lireChoix(t); ajout = false; autour = null; lig = false; sel = null; selEv = null; $('#focus').hidden = true; fiche(null);
+  if (mode === 'arb' || mode === 'car') setMode('ess'); else { majLig(); layout(); }
+  voirChoix();
+});
+function basculer(k) {               // ajouter ou retirer une personne de la sélection
+  const p = P[k], i = choix.indexOf(k);
+  if (i >= 0) choix.splice(i, 1);
+  else if (p.date || p.interp) choix.push(k);
+  else { $('#choix-i').textContent = ' ' + p.nom + ' n’a pas de date : pas sur la frise'; return; }
+  majChoix();
+  if (ajout) { if (p.el) p.el.classList.toggle('choisi', i < 0); return; }
+  const c = centreAnnee(); layout(); allerA(c);
+}
+function setAjout(on) {
+  if (mode === 'arb' || mode === 'car') return;
+  ajout = on;
+  if (on && (autour != null || lig)) { autour = null; lig = false; $('#focus').hidden = true; majLig(); }
+  const c = centreAnnee();
+  majChoix(); layout();
+  if (on || !voirChoix()) allerA(c);
+}
+$('#choix-b').onclick = () => setAjout(!ajout);
+$('#choix-x').onclick = () => { choix = []; if (ajout) { majChoix(); layout(); } else setAjout(false); };
 const MODES = ['rep', 'ess', 'tous', 'arb', 'car'];
 let centre = -1000;                   // année au centre de la frise, gardée pendant la vue Arbre
 function setMode(m, init) {
@@ -771,6 +846,8 @@ function setMode(m, init) {
   try { localStorage.setItem('personnages-vue', m); } catch (e) {}
   const a = m === 'arb', c = m === 'car';
   tl.hidden = a || c; $('#arb').hidden = !a; $('#car').hidden = !c; $('#zoom').hidden = a;
+  if (a || c) ajout = false;
+  majChoix();
   document.body.classList.toggle('vue-car', c); setHead();
   if (c) {
     if (autour != null || lig) { autour = null; lig = false; majLig(); }
@@ -1109,7 +1186,9 @@ function chercher() {
     + esc(quand(p, true)) + ' · ' + esc(p.resume.slice(0, 80)) + '</span></li>').join('') : '<li><span>Aucun résultat</span></li>';
   res.hidden = false;
 }
-function prendre(i) { const p = hits[i]; if (!p) return; res.hidden = true; q.blur(); choisir(p.k, true); }
+function prendre(i) { const p = hits[i]; if (!p) return;
+  if (ajout) { basculer(p.k); q.value = ''; res.hidden = true; q.focus(); return; }
+  res.hidden = true; q.blur(); choisir(p.k, true); }
 q.addEventListener('input', chercher);
 q.addEventListener('keydown', e => {
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -1120,7 +1199,7 @@ q.addEventListener('keydown', e => {
 });
 res.addEventListener('click', e => { const li = e.target.closest('li[data-i]'); if (li) prendre(+li.dataset.i); });
 document.addEventListener('click', e => { if (!e.target.closest('.search')) res.hidden = true; });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !aide.open && document.activeElement !== q && (sel != null || selEv || autour != null || lig)) deselect(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !aide.open && document.activeElement !== q && (sel != null || selEv || autour != null || lig || ajout)) deselect(); });
 
 /* ---------- mode d'emploi : ouvert seul à la première visite ---------- */
 const aide = $('#aide');
@@ -1157,7 +1236,11 @@ document.addEventListener('fullscreenchange', fsSync); document.addEventListener
 ppy = Math.max(0.2, tl.clientWidth / 2350);
 let vue = 'ess';
 try { vue = MODES.includes(localStorage.getItem('personnages-vue')) ? localStorage.getItem('personnages-vue') : 'ess'; } catch (e) {}
+{ const t = selAdresse();          // une adresse #sel=… l'emporte sur la sélection gardée
+  if (t != null) { choix = lireChoix(t); if (choix.length && (vue === 'arb' || vue === 'car')) vue = 'ess'; }
+  else try { choix = lireChoix(localStorage.getItem('personnages-selection')); } catch (e) {} }
 setMode(vue, true);
+if (choix.length && vue !== 'arb' && vue !== 'car') voirChoix();
 try { if (!localStorage.getItem('personnages-aide')) { aide.showModal(); localStorage.setItem('personnages-aide', 'vu'); } } catch (e) {}
 })();
 </script>
