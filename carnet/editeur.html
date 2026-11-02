@@ -1993,6 +1993,9 @@ mark { background: var(--mk-jaune); color: var(--mk-texte); border-radius: .1em;
 mark[data-c="vert"] { background: var(--mk-vert); } mark[data-c="bleu"] { background: var(--mk-bleu); } mark[data-c="rouge"] { background: var(--mk-rouge); }
 .photos { display: flex; gap: .4em; flex-wrap: wrap; margin-top: .3em; }
 .photos img { max-height: 45vh; max-width: 100%; border-radius: .25em; }
+.seule { height: 88vh; display: flex; flex-direction: column; }
+.seule .photos { flex: 1; min-height: 0; margin: 0; flex-wrap: nowrap; gap: 1em; }
+.seule .photos img { flex: 1 1 0; min-width: 0; width: 100%; height: 100%; max-height: none; object-fit: contain; border-radius: 0; }
 .fil { font-size: .6em; color: var(--sub); margin-bottom: .6em; }
 .couverture { min-height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 1.8em; font-weight: 700; }
 .attenuer .bloc:not(.nouveau) { opacity: .45; }
@@ -2050,6 +2053,12 @@ mark[data-c="vert"] { background: var(--mk-vert); } mark[data-c="bleu"] { backgr
     return `<div class="bloc n${p.indent === 0 ? 0 : 1} ${classe}" data-id="${p.id}" style="margin-left:${marge}em;background:${fond(p.color, sombreOn)}">${p.text || "&nbsp;"}${photos ? photosHtml(p) : ""}</div>`;
   }
 
+  /** Paragraphe seul à l'écran avec photos : elles prennent toute la place, son texte en petit au bout du fil. */
+  function imageSeule(p) {
+    const fil = [...ancetres(p).map(a => esc(plain(a.text))), esc(plain(p.text))].filter(Boolean).join(" › ");
+    return `<div class="seule" data-id="${p.id}">${fil ? `<div class="fil">${fil}</div>` : ""}${photosHtml(p)}</div>`;
+  }
+
   /** Remplit l'écran du public ; rend les ids montrés (pour la sélection de la vue d'ensemble). */
   function ecranPublic() {
     const w = P.win;
@@ -2067,7 +2076,8 @@ mark[data-c="vert"] { background: var(--mk-vert); } mark[data-c="bleu"] { backgr
       // une partie en entier
       const z = v.findIndex(p => p.id === P.zoom), fin = finPartie(v, z);
       const fil = ancetres(v[z]).map(a => esc(plain(a.text))).join(" › ");
-      contenu = (fil ? `<div class="fil">${fil}</div>` : "") + v.slice(z, fin).map(p => blocHtml(p, v[z].indent, s)).join("");
+      contenu = fin - z === 1 && v[z].images?.length ? imageSeule(v[z])
+        : (fil ? `<div class="fil">${fil}</div>` : "") + v.slice(z, fin).map(p => blocHtml(p, v[z].indent, s)).join("");
     } else if (P.mode === "plan") {
       ecran.classList.add("plan");
       return vueEnsemble(d, ecran, v.slice(0, i + 1), s);
@@ -2079,7 +2089,7 @@ mark[data-c="vert"] { background: var(--mk-vert); } mark[data-c="bleu"] { backgr
       const base = Math.min(...v.slice(debut, i + 1).map(p => p.indent));
       const nouveau = debutGroupe(v, i);
       const fil = v[debut].indent > 0 ? ancetres(v[debut]).map(a => esc(plain(a.text))).join(" › ") : "";
-      contenu = (fil ? `<div class="fil">${fil}</div>` : "") +
+      contenu = debut === i && v[i].images?.length ? imageSeule(v[i]) : (fil ? `<div class="fil">${fil}</div>` : "") +
         v.slice(debut, i + 1).map((p, k) => blocHtml(p, base, s, debut + k >= nouveau ? "nouveau" : "")).join("");
       defiler = v[i].id;
     }
