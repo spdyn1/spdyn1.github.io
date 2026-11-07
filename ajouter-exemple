@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+"""Notes d'exemple de Carnet 2 (menu ⋮ → Notes d'exemple…).
+
+    ./ajouter-exemple [note.carnet ...] [--sans-envoi]
+
+Copie les fichiers donnés dans carnet/exemples/, puis refait carnet/exemples.json à partir de tous
+les fichiers de ce dossier, et enfin commite et pousse (sauf --sans-envoi). Sans fichier : refait
+seulement la liste (après avoir supprimé, renommé ou modifié un fichier à la main).
+
+Chaque fichier contient une seule note ; l'identifiant, le titre et la date de modification
+viennent de la note. Une note plus récente que celle du téléphone y est proposée en mise à jour.
+La description (ligne sous le titre) se règle dans exemples.json, puis on relance le script :
+elle est gardée tant que l'identifiant de la note ne change pas.
+
+L'ordre de exemples.json est gardé : les nouvelles notes vont à la fin. Pour changer l'ordre,
+déplace les entrées dans exemples.json puis relance le script.
+"""
+import json
+import shutil
+import subprocess
+import sys
+import zipfile
+from pathlib import Path
+
+RACINE = Path(__file__).resolve().parent
+EXEMPLES = RACINE / "carnet" / "exemples"
+LISTE = RACINE / "carnet" / "exemples.json"
+
+
+def decrire(f: Path) -> dict:
+    try:
+        with zipfile.ZipFile(f) as z:
+            carnet = json.loads(z.read("carnet.json"))
+    except (zipfile.BadZipFile, KeyError, ValueError) as e:
+        sys.exit(f"{f.name} : ce n'est pas un fichier Carnet lisible ({e}).")
+    notes = carnet.get("notes", [])
+    if len(notes) != 1:
+        sys.exit(f"{f.name} : il faut une seule note, il y en a {len(notes)}.")
+    n = notes[0]
+    return {
+        "id": n["id"],
+        "titre": n["titre"],
+        "description": "",
+        "fichier": f"exemples/{f.name}",
+        "modifiée": n.get("modifiée") or carnet.get("date"),
+    }
+
+
+def git(*args: str) -> None:
+    subprocess.run(["git", "-C", str(RACINE), *args], check=True)
+
+
+def main() -> None:
+    args = sys.argv[1:]
+    envoi = "--sans-envoi" not in args
+    fichiers = [Path(a) for a in args if a != "--sans-envoi"]
+    if envoi:
+        git("pull", "-q", "--rebase", "--autostash")
+    EXEMPLES.mkdir(parents=True, exist_ok=True)
+    for f in fichiers:
+        if f.suffix.lower() != ".carnet" or not f.is_file():
+            sys.exit(f"{f} : il faut un fichier .carnet existant.")
+        decrire(f)
+        if f.resolve() != (EXEMPLES / f.name).resolve():
+            shutil.copy2(f, EXEMPLES / f.name)
+
+    notes = {e["id"]: e for e in map(decrire, sorted(EXEMPLES.glob("*.carnet")))}
+    ancien = json.loads(LISTE.read_text(encoding="utf-8")).get("exemples", []) if LISTE.exists() else []
+    for e in ancien:
+        if e.get("id") in notes:
+            notes[e["id"]]["description"] = e.get("description", "")
+    ordre = [e["id"] for e in ancien if e.get("id") in notes]
+    ordre += [k for k in notes if k not in ordre]
+    liste = [notes[k] for k in ordre]
+    LISTE.write_text(json.dumps({"exemples": liste}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+
+    for e in liste:
+        print(f"  {e['titre']}  ({e['fichier']}, {e['modifiée']})" + ("" if e["description"] else "  — sans description"))
+    if envoi:
+        git("add", "-A", "carnet/exemples", str(LISTE))
+        if subprocess.run(["git", "-C", str(RACINE), "diff", "--cached", "--quiet"]).returncode == 0:
+            print("Rien de nouveau à publier.")
+            return
+        noms = ", ".join(f.stem for f in fichiers) or "liste"
+        git("commit", "-q", "-m", f"Notes d'exemple : {noms}")
+        git("push", "-q")
+        print("Publié : https://spdyn1.github.io/carnet/ (visible d'ici une à deux minutes)")
+
+
+if __name__ == "__main__":
+    main()
