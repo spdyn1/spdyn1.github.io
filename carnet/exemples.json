@@ -1,6 +1,13 @@
 {
  "exemples": [
   {
+   "id": "5936953a-c525-4efc-80c8-01262a8f36d2",
+   "titre": "Démonstration : ce qu'une note sait faire",
+   "description": "Plan repliable, surligneurs, couleurs, liens, versets, exposé prêt à présenter : à essayer en premier",
+   "fichier": "exemples/demonstration.carnet",
+   "modifiée": "2026-11-08T22:34:30Z"
+  },
+  {
    "id": "a8cde5a7-8758-459b-b33f-9cd4f0cfafea",
    "titre": "Repères bibliques",
    "description": "Événements, puissances mondiales et personnages datés, d’Adam au Ier siècle",
