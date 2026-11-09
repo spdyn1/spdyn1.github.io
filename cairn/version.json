@@ -1,1 +1,1 @@
-{"versionCode": 16, "versionName": "0.6.6", "notes": "Moins de batterie consommée sur l'accueil quand les secondes sont affichées.", "apk": "Cairn.apk", "sha256": "9fed721b65aaa27d5e00f6aeb397dfeba2d3fcd5995c3fd5ab3d41f02e5c4c6b"}
+{"versionCode": 17, "versionName": "0.6.7", "notes": "Réglages → Affichage → « Fond d'écran noir » : remplace le fond d'écran d'Android (écran des applis récentes, verrouillage) par du noir uni", "apk": "Cairn.apk", "sha256": "7b13822a22a9eb34b58f41a217cd7f13fb152302237fe315bec9a7f937d576ff"}
