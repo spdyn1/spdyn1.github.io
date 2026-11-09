@@ -1,1 +1,1 @@
-{"versionCode": 140, "versionName": "1.0.40", "notes": "Import PDF : les liens internes (sommaire, renvois) et les adresses web sont conservés.", "apk": "Carnet.apk", "sha256": "9de9c488d64d4ebd044231464b74b41b932c9a908bde289aa50270ea26db1134"}
+{"versionCode": 141, "versionName": "1.0.41", "notes": "Aide : recherche dans le texte (loupe, occurrences surlignées, précédente / suivante)", "apk": "Carnet.apk", "sha256": "e69c978b442aae045a6db942e7be54bcfc336c5d699f377eabb27ba0ac0f085a"}
