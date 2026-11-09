@@ -1,1 +1,1 @@
-{"versionCode": 6, "versionName": "0.4.0", "notes": "Liens cliquables (web, mail, internes) ; sélection et copie de texte (appui long, poignées)", "apk": "Calame.apk", "sha256": "fd43869a6b8ee9b462e68b93ab2d20091d538561cd9fb483b858c7adbfbf4473"}
+{"versionCode": 7, "versionName": "0.4.1", "notes": "Message explicatif si la sélection de texte n'est pas disponible (Android avant 15)", "apk": "Calame.apk", "sha256": "22a7adced5b0accbaf85dee3b0f25c2ba46b3ea4d08741b8d5ab07e0cc582b31"}
