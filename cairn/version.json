@@ -1,1 +1,1 @@
-{"versionCode": 17, "versionName": "0.6.7", "notes": "Réglages → Affichage → « Fond d'écran noir » : remplace le fond d'écran d'Android (écran des applis récentes, verrouillage) par du noir uni", "apk": "Cairn.apk", "sha256": "7b13822a22a9eb34b58f41a217cd7f13fb152302237fe315bec9a7f937d576ff"}
+{"versionCode": 18, "versionName": "0.6.8", "notes": "Cairn est maintenant disponible en anglais et en français (langue de l'appli réglable dans Android).", "apk": "Cairn.apk", "sha256": "5a11bac2abbaf550ec8384c894244f2974975c9154891a532e3fc65ef543ab47"}
