@@ -1,1 +1,1 @@
-{"versionCode": 7, "versionName": "0.4.1", "notes": "Message explicatif si la sélection de texte n'est pas disponible (Android avant 15)", "apk": "Calame.apk", "sha256": "22a7adced5b0accbaf85dee3b0f25c2ba46b3ea4d08741b8d5ab07e0cc582b31"}
+{"versionCode": 8, "versionName": "0.5.0", "notes": "Ouverture en lecture des documents Word (.docx), LibreOffice (.odt) et Excel (.xlsx) ; export en PDF", "apk": "Calame.apk", "sha256": "0666524f9fc63cc889013e77e6b9887307d1b926c476248f60b181892d4e3683"}
