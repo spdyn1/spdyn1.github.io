@@ -1,1 +1,1 @@
-{"versionCode": 8, "versionName": "0.5.0", "notes": "Ouverture en lecture des documents Word (.docx), LibreOffice (.odt) et Excel (.xlsx) ; export en PDF", "apk": "Calame.apk", "sha256": "0666524f9fc63cc889013e77e6b9887307d1b926c476248f60b181892d4e3683"}
+{"versionCode": 9, "versionName": "0.6.0", "notes": "Signature, texte, tampons et crayon : on peut signer, annoter et tamponner un PDF. Annuler/rétablir. Ouverture des documents Word, LibreOffice et Excel.", "apk": "Calame.apk", "sha256": "61a8a33c6a9ceb2ebae310177efe22611ac8cfc50d2a4cd45c0e79dfbf681f40"}
