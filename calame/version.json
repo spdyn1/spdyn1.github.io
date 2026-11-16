@@ -1,1 +1,1 @@
-{"versionCode": 9, "versionName": "0.6.0", "notes": "Signature, texte, tampons et crayon : on peut signer, annoter et tamponner un PDF. Annuler/rétablir. Ouverture des documents Word, LibreOffice et Excel.", "apk": "Calame.apk", "sha256": "61a8a33c6a9ceb2ebae310177efe22611ac8cfc50d2a4cd45c0e79dfbf681f40"}
+{"versionCode": 10, "versionName": "0.6.1", "notes": "Surlignage du texte en vraie annotation PDF, avec les 6 couleurs de Carnet (Android 15+).", "apk": "Calame.apk", "sha256": "7bd8d3ba257c85ae34c0290ea78726de4c58ced752f4c4c288139fcbbe9ab74a"}
