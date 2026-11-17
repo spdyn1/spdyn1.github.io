@@ -1,1 +1,1 @@
-{"versionCode": 14, "versionName": "0.7.2", "notes": "Coche et croix dans le menu T", "apk": "Calame.apk", "sha256": "2bf2ee9d994d84fe81673f51f8c887effe9a2de43b7594202b2bd2294f62d3ea"}
+{"versionCode": 15, "versionName": "0.8.0", "notes": "Scanner de documents (scanner Google), récents avec détails et chemin, gestion des pages (supprimer, pivoter, déplacer, dupliquer, extraire, ajouter page vierge/scan/photo/PDF), raccourci d'icône Scanner", "apk": "Calame.apk", "sha256": "964ac0484a29d9973067d70715748daec656a3159d829595ebf3f234a1af1be1"}
