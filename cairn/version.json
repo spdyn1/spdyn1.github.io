@@ -1,1 +1,1 @@
-{"versionCode": 25, "versionName": "0.7.5", "notes": "Carte note sous l'heure : trois premières lignes de ta note Carnet, un appui ouvre Carnet à ce paragraphe. Balayage des cartes en boucle sans fin.", "apk": "Cairn.apk", "sha256": "04a28bec5bb23af96acfc59ee9a73cd8ab21f8731077a9cf09d131434398c3d9"}
+{"versionCode": 26, "versionName": "0.7.6", "notes": "Correctif : un avis de mise à jour périmé est actualisé au lieu de provoquer une erreur.", "apk": "Cairn.apk", "sha256": "6e86530fa0f49b1dd12c37ac42014378788f530424bfcc4b26bb7217b015c7b3"}
