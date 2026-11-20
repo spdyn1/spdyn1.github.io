@@ -1,1 +1,1 @@
-{"versionCode": 20, "versionName": "0.8.5", "notes": "Correctif : ajouter les pages d'un autre PDF et Dupliquer ne plantent plus (« COSStream has been closed »).", "apk": "Calame.apk", "sha256": "26b220541fb45d678e28fdc4819da9d365f64c6f2810550cf91fdec578fb4880"}
+{"versionCode": 21, "versionName": "0.8.6", "notes": "Mise à jour : nouvelle fenêtre « À propos », avis plus fiable quand une version plus récente vient de sortir, textes harmonisés.", "apk": "Calame.apk", "sha256": "0c78afad84c30b2aecbe592f7a833fd11555c32bad609fceb6d7d0864835b5d8"}
