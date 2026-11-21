@@ -3,7 +3,8 @@
   "versionCode": 160,
   "versionName": "1.0.60",
   "date": "2026-11-21",
-  "notes": "Nouveau : rubrique Nouveautés en tête de l'aide (les dernières versions et ce qu'elles apportent)."
+  "notes": "Nouveau : rubrique Nouveautés en tête de l'aide (les dernières versions et ce qu'elles apportent).",
+  "notes_en": "New: What's new section at the top of the help (the latest versions and what they bring)."
  },
  {
   "versionCode": 159,
