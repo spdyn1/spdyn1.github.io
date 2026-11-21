@@ -1,5 +1,11 @@
 [
  {
+  "versionCode": 10,
+  "versionName": "0.7.2",
+  "date": "2026-11-21",
+  "notes": "Nouveau : rubrique Nouveautés sur l'écran d'accueil (les dernières versions et ce qu'elles apportent)."
+ },
+ {
   "versionCode": 9,
   "versionName": "0.7.1",
   "date": "2026-11-20",
