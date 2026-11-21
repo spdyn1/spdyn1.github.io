@@ -3,12 +3,14 @@
   "versionCode": 10,
   "versionName": "0.7.2",
   "date": "2026-11-21",
-  "notes": "Nouveau : rubrique Nouveautés sur l'écran d'accueil (les dernières versions et ce qu'elles apportent)."
+  "notes": "Nouveau : rubrique Nouveautés sur l'écran d'accueil (les dernières versions et ce qu'elles apportent).",
+  "notes_en": "New: What's new section on the home screen (the latest versions and what they bring)."
  },
  {
   "versionCode": 9,
   "versionName": "0.7.1",
   "date": "2026-11-20",
-  "notes": "Avis de mise à jour plus fiable quand une version plus récente vient de sortir ; textes de mise à jour harmonisés."
+  "notes": "Avis de mise à jour plus fiable quand une version plus récente vient de sortir ; textes de mise à jour harmonisés.",
+  "notes_en": "Update notice more reliable when a newer version has just been released; update texts unified."
  }
 ]

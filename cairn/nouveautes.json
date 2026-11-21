@@ -3,18 +3,21 @@
   "versionCode": 28,
   "versionName": "0.7.8",
   "date": "2026-11-21",
-  "notes": "Nouveau : rubrique Nouveautés en tête de l'aide (Réglages > Aide) : les dernières versions et ce qu'elles apportent."
+  "notes": "Nouveau : rubrique Nouveautés en tête de l'aide (Réglages > Aide) : les dernières versions et ce qu'elles apportent.",
+  "notes_en": "New: What's new section at the top of the help (Settings > Help): the latest versions and what they bring."
  },
  {
   "versionCode": 27,
   "versionName": "0.7.7",
   "date": "2026-11-21",
-  "notes": "Nouveau : Ajouter un lien (page web dans le tiroir, les favoris et la recherche) ; bloc Récents en haut de la liste des applis (réglable, effaçable)."
+  "notes": "Nouveau : Ajouter un lien (page web dans le tiroir, les favoris et la recherche) ; bloc Récents en haut de la liste des applis (réglable, effaçable).",
+  "notes_en": "New: Add a link (a web page in the drawer, favorites and search); Recents block at the top of the app list (adjustable, can be cleared)."
  },
  {
   "versionCode": 26,
   "versionName": "0.7.6",
   "date": "2026-11-20",
-  "notes": "Correctif : l'avis de mise à jour ne reste plus affiché quand il est périmé."
+  "notes": "Correctif : l'avis de mise à jour ne reste plus affiché quand il est périmé.",
+  "notes_en": "Fix: the update notice no longer stays up once it is out of date."
  }
 ]

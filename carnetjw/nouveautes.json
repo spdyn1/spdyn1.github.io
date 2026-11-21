@@ -9,18 +9,21 @@
   "versionCode": 159,
   "versionName": "1.0.59",
   "date": "2026-11-20",
-  "notes": "Mise à jour : avis plus fiable quand une version plus récente vient de sortir, textes de mise à jour harmonisés."
+  "notes": "Mise à jour : avis plus fiable quand une version plus récente vient de sortir, textes de mise à jour harmonisés.",
+  "notes_en": "Update: more reliable notice when a newer version has just come out, unified update texts."
  },
  {
   "versionCode": 157,
   "versionName": "1.0.57",
   "date": "2026-11-20",
-  "notes": "Planning : un clic sur le statut d'une tâche le fait avancer, pastille de statut dans le planning."
+  "notes": "Planning : un clic sur le statut d'une tâche le fait avancer, pastille de statut dans le planning.",
+  "notes_en": "Planning: a click on a task's status moves it forward, status dot in the planning."
  },
  {
   "versionCode": 156,
   "versionName": "1.0.56",
   "date": "2026-11-20",
-  "notes": "Export PDF : les liens web sont cliquables."
+  "notes": "Export PDF : les liens web sont cliquables.",
+  "notes_en": "PDF export: web links are clickable."
  }
 ]
