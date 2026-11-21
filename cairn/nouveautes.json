@@ -1,0 +1,14 @@
+[
+ {
+  "versionCode": 27,
+  "versionName": "0.7.7",
+  "date": "2026-11-21",
+  "notes": "Nouveau : Ajouter un lien (page web dans le tiroir, les favoris et la recherche) ; bloc Récents en haut de la liste des applis (réglable, effaçable)."
+ },
+ {
+  "versionCode": 26,
+  "versionName": "0.7.6",
+  "date": "2026-11-20",
+  "notes": "Correctif : l'avis de mise à jour ne reste plus affiché quand il est périmé."
+ }
+]
