@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 11,
+  "versionName": "0.7.3",
+  "date": "2026-11-21",
+  "notes": "Les notes de version et les nouveautés s'affichent aussi en anglais.",
+  "notes_en": "Release notes and what's new are now shown in English too."
+ },
+ {
   "versionCode": 10,
   "versionName": "0.7.2",
   "date": "2026-11-21",
