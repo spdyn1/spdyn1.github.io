@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 29,
+  "versionName": "0.7.9",
+  "date": "2026-11-21",
+  "notes": "Nouveau : « Modifier le lien » dans le menu d'appui long d'un lien ; notes de version aussi en anglais.",
+  "notes_en": "New: “Edit link” in a link's long-press menu; release notes are now available in English too."
+ },
+ {
   "versionCode": 28,
   "versionName": "0.7.8",
   "date": "2026-11-21",
