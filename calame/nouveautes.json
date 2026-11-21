@@ -1,0 +1,14 @@
+[
+ {
+  "versionCode": 22,
+  "versionName": "0.8.7",
+  "date": "2026-11-21",
+  "notes": "Aide : la 5e ligne d'« Annoter » est lisible (Annuler / Rétablir)."
+ },
+ {
+  "versionCode": 21,
+  "versionName": "0.8.6",
+  "date": "2026-11-20",
+  "notes": "Mise à jour : nouvelle fenêtre « À propos », avis plus fiable quand une version plus récente vient de sortir, textes harmonisés."
+ }
+]
