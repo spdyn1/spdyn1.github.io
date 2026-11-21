@@ -1,1 +1,1 @@
-{"versionCode": 26, "versionName": "0.7.6", "notes": "Correctif : un avis de mise à jour périmé est actualisé au lieu de provoquer une erreur.", "apk": "Cairn.apk", "sha256": "6e86530fa0f49b1dd12c37ac42014378788f530424bfcc4b26bb7217b015c7b3"}
+{"versionCode": 27, "versionName": "0.7.7", "notes": "Nouveau : Ajouter un lien (page web dans le tiroir, les favoris et la recherche) ; bloc Récents en haut de la liste des applis (réglable, effaçable).", "apk": "Cairn.apk", "sha256": "f9c1e9ac30693480e20d88b022469a19a0b1e0b1d9f071ec3a95a01858d0243c"}
