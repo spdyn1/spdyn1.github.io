@@ -1,5 +1,11 @@
 [
  {
+  "versionCode": 23,
+  "versionName": "0.8.8",
+  "date": "2026-11-21",
+  "notes": "Nouveau : rubrique Nouveautés dans l'aide (les dernières versions et ce qu'elles apportent)."
+ },
+ {
   "versionCode": 22,
   "versionName": "0.8.7",
   "date": "2026-11-21",
