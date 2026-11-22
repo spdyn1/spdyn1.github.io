@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 10,
+  "versionName": "0.3.3",
+  "date": "2026-11-22",
+  "notes": "Corrige le bas de l'écran coupé sur les téléphones à 3 boutons de navigation ; affichage plus compact sur petit écran.",
+  "notes_en": "Fixes the bottom of the screen being cut off on phones with 3-button navigation; more compact layout on small screens."
+ },
+ {
   "versionCode": 9,
   "versionName": "0.3.2",
   "date": "2026-11-22",
