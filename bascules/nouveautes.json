@@ -1,5 +1,11 @@
 [
  {
+  "versionCode": 12,
+  "versionName": "0.7.4",
+  "date": "2026-11-22",
+  "notes": "Un écran de démarrage liste les autorisations manquantes, avec un bouton pour chacune. La tuile « Écran allumé » y renvoie quand il manque le droit de modifier les réglages."
+ },
+ {
   "versionCode": 11,
   "versionName": "0.7.3",
   "date": "2026-11-21",
