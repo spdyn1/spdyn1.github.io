@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 7,
+  "versionName": "0.3.0",
+  "date": "2026-11-22",
+  "notes": "Coucou : nouveau nom, nouvelle icône, aide au déblocage des paramètres restreints (Android 13+).",
+  "notes_en": "Coucou: new name, new icon, help for unlocking restricted settings (Android 13+)."
+ },
+ {
   "versionCode": 6,
   "versionName": "0.2.4",
   "date": "2026-11-22",
