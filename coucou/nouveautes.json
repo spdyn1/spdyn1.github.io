@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 8,
+  "versionName": "0.3.1",
+  "date": "2026-11-22",
+  "notes": "Demande d'accord : le nom de ton aidant s'affiche avant qu'il voie ton écran, tu peux refuser. Le partage s'arrête tout seul si ton aidant ne répond plus.",
+  "notes_en": "Approval prompt: your helper's name is shown before they see your screen, and you can refuse. Sharing stops automatically if your helper stops responding."
+ },
+ {
   "versionCode": 7,
   "versionName": "0.3.0",
   "date": "2026-11-22",
