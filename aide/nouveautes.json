@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 3,
+  "versionName": "0.2.1",
+  "date": "2026-11-22",
+  "notes": "APK deux fois plus léger (24 Mo au lieu de 48) : processeurs ARM uniquement.",
+  "notes_en": "Half-size APK (24 MB instead of 48): ARM processors only."
+ },
+ {
   "versionCode": 2,
   "versionName": "0.2.0",
   "date": "2026-11-22",
