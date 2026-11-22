@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 9,
+  "versionName": "0.3.2",
+  "date": "2026-11-22",
+  "notes": "fr",
+  "notes_en": "en"
+ },
+ {
   "versionCode": 8,
   "versionName": "0.3.1",
   "date": "2026-11-22",
