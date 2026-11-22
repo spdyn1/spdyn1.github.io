@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 33,
+  "versionName": "0.8.3",
+  "date": "2026-11-22",
+  "notes": "La ligne « Aide à distance » ouvre maintenant l'appli Coucou (ex-Aide).",
+  "notes_en": "The “Remote help” line now opens the Coucou app (formerly Aide)."
+ },
+ {
   "versionCode": 32,
   "versionName": "0.8.2",
   "date": "2026-11-22",
