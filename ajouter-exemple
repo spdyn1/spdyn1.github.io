@@ -3,8 +3,8 @@
 
     ./ajouter-exemple [note.carnet ...] [--sans-envoi]
 
-Copie les fichiers donnés dans carnet/exemples/, puis refait carnet/exemples.json à partir de tous
-les fichiers de ce dossier, et enfin commite et pousse (sauf --sans-envoi). Sans fichier : refait
+Copie les fichiers donnés dans carnet/exemples/, puis refait carnet/exemples.json (et exemples-en.json pour
+les fichiers « -en.carnet ») à partir de tous les fichiers de ce dossier, et enfin commite et pousse (sauf --sans-envoi). Sans fichier : refait
 seulement la liste (après avoir supprimé, renommé ou modifié un fichier à la main).
 
 Chaque fichier contient une seule note ; l'identifiant, le titre et la date de modification
@@ -25,6 +25,7 @@ from pathlib import Path
 RACINE = Path(__file__).resolve().parent
 EXEMPLES = RACINE / "carnet" / "exemples"
 LISTE = RACINE / "carnet" / "exemples.json"
+LISTE_EN = RACINE / "carnet" / "exemples-en.json"  # notes dont le fichier finit par -en.carnet
 
 
 def decrire(f: Path) -> dict:
@@ -64,20 +65,25 @@ def main() -> None:
         if f.resolve() != (EXEMPLES / f.name).resolve():
             shutil.copy2(f, EXEMPLES / f.name)
 
-    notes = {e["id"]: e for e in map(decrire, sorted(EXEMPLES.glob("*.carnet")))}
-    ancien = json.loads(LISTE.read_text(encoding="utf-8")).get("exemples", []) if LISTE.exists() else []
-    for e in ancien:
-        if e.get("id") in notes:
-            notes[e["id"]]["description"] = e.get("description", "")
-    ordre = [e["id"] for e in ancien if e.get("id") in notes]
-    ordre += [k for k in notes if k not in ordre]
-    liste = [notes[k] for k in ordre]
-    LISTE.write_text(json.dumps({"exemples": liste}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    tous = {en: {e["id"]: e for e in map(decrire, sorted(f for f in EXEMPLES.glob("*.carnet") if f.stem.endswith("-en") == en))}
+            for en in (False, True)}
+    liste = []
+    for en, chemin in ((False, LISTE), (True, LISTE_EN)):
+        notes = tous[en]
+        ancien = json.loads(chemin.read_text(encoding="utf-8")).get("exemples", []) if chemin.exists() else []
+        for e in ancien:
+            if e.get("id") in notes:
+                notes[e["id"]]["description"] = e.get("description", "")
+        ordre = [e["id"] for e in ancien if e.get("id") in notes]
+        ordre += [k for k in notes if k not in ordre]
+        l = [notes[k] for k in ordre]
+        chemin.write_text(json.dumps({"exemples": l}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        liste += l
 
     for e in liste:
         print(f"  {e['titre']}  ({e['fichier']}, {e['modifiée']})" + ("" if e["description"] else "  — sans description"))
     if envoi:
-        git("add", "-A", "carnet/exemples", str(LISTE))
+        git("add", "-A", "carnet/exemples", str(LISTE), str(LISTE_EN))
         if subprocess.run(["git", "-C", str(RACINE), "diff", "--cached", "--quiet"]).returncode == 0:
             print("Rien de nouveau à publier.")
             return
