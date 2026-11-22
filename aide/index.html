@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aide — aide à distance</title>
+<style>
+  body { background: #11111b; color: #cdd6f4; font: 18px/1.5 system-ui, sans-serif; margin: 0; padding: 32px 16px; }
+  main { max-width: 32em; margin: auto; }
+  h1 { font-weight: 300; font-size: 2.4em; margin: 0 0 .2em; }
+  p, li { color: #a6adc8; }
+  a.bouton { display: inline-block; margin-top: 1em; padding: .7em 1.4em; border-radius: 99px; background: #a6e3a1; color: #11111b; text-decoration: none; font-weight: 600; }
+  a { color: #89b4fa; }
+  [data-l] { display: none; } [data-l].on { display: block; }
+  .lang { float: right; } .lang button { background: #313244; color: #cdd6f4; border: 0; border-radius: 8px; padding: 4px 10px; font: inherit; margin-left: 6px; cursor: pointer; }
+</style>
+</head>
+<body>
+<main>
+  <div class="lang"><button data-b="fr">Français</button><button data-b="en">English</button></div>
+
+  <div data-l="fr">
+    <h1>🤝 Aide</h1>
+    <p>Quelqu'un te dépanne à distance ? Cette appli lui montre ton écran et lui laisse toucher et taper à ta place, seulement pendant une session que tu autorises. Un code à usage unique, un bouton pour tout arrêter.</p>
+    <a class="bouton" href="Aide.apk">Télécharger l'APK</a>
+    <p>Android te demandera d'autoriser l'installation depuis ce site. Ensuite, Aide signale elle-même chaque nouvelle version.</p>
+    <p><a href="https://aide-tel.legift.fr/guide">Comment ça marche ?</a></p>
+  </div>
+
+  <div data-l="en">
+    <h1>🤝 Remote Help</h1>
+    <p>Someone is helping you from afar? This app shows them your screen and lets them tap and type for you, only during a session you allow. A one-time code, one button to stop everything.</p>
+    <a class="bouton" href="Aide.apk">Download the APK</a>
+    <p>Android will ask you to allow installing from this site. After that, the app tells you about each new version.</p>
+    <p><a href="https://aide-tel.legift.fr/guide?lang=en">How does it work?</a></p>
+  </div>
+</main>
+<script>
+const l = (navigator.language || 'en').startsWith('fr') ? 'fr' : 'en';
+function set(x) { document.querySelectorAll('[data-l]').forEach(e => e.classList.toggle('on', e.dataset.l === x)); document.documentElement.lang = x; }
+document.querySelectorAll('[data-b]').forEach(b => b.onclick = () => set(b.dataset.b));
+set(l);
+</script>
+</body>
+</html>
