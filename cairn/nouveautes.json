@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 35,
+  "versionName": "0.8.5",
+  "date": "2026-11-22",
+  "notes": "Réglages : « Aide » passe en ⋮ en haut à droite ; « Aide à distance » est mise en évidence.",
+  "notes_en": "Settings: “Help” moves to a ⋮ menu at the top right; “Remote help” is highlighted."
+ },
+ {
   "versionCode": 34,
   "versionName": "0.8.4",
   "date": "2026-11-22",
