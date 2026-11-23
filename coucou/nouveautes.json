@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 11,
+  "versionName": "0.3.4",
+  "date": "2026-11-23",
+  "notes": "Le lien « Ouvrir la fiche de l'appli » ouvre enfin la bonne page ; étapes « paramètres restreints » corrigées",
+  "notes_en": "The “Open app info” link now opens the right page; “restricted settings” steps fixed"
+ },
+ {
   "versionCode": 10,
   "versionName": "0.3.3",
   "date": "2026-11-22",
