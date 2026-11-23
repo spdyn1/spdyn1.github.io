@@ -1,5 +1,11 @@
 [
  {
+  "versionCode": 15,
+  "versionName": "0.8.2",
+  "date": "2026-11-23",
+  "notes": "Notifications : le bouton Autoriser fonctionne sur Android 12"
+ },
+ {
   "versionCode": 14,
   "versionName": "0.8.1",
   "date": "2026-11-23",
