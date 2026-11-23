@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 14,
+  "versionName": "0.8.1",
+  "date": "2026-11-23",
+  "notes": "Aide : explication de l'Aide à distance (Coucou) dans les Réglages.",
+  "notes_en": "Help: explains Remote help (Coucou) in Settings."
+ },
+ {
   "versionCode": 13,
   "versionName": "0.8.0",
   "date": "2026-11-23",
