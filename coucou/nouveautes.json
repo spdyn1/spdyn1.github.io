@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 12,
+  "versionName": "0.3.5",
+  "date": "2026-11-23",
+  "notes": "Reprise sans nouveau code : si la fenêtre de l'aidant est rafraîchie ou perd la liaison, il revient sans nouveau code ni nouvelle autorisation (3 minutes).",
+  "notes_en": "Resume without a new code: if the helper's window is refreshed or loses the link, they come back without a new code or a new approval (3 minutes)."
+ },
+ {
   "versionCode": 11,
   "versionName": "0.3.4",
   "date": "2026-11-23",
