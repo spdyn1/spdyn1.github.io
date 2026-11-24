@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 15,
+  "versionName": "0.3.8",
+  "date": "2026-11-24",
+  "notes": "Nouveau : aidants de confiance. Coche « Toujours autoriser » lors d'une demande : ses prochaines connexions sont acceptées sans question (liste et bouton Retirer dans l'appli). Visionneuse : mode « Fenêtre seule ».",
+  "notes_en": "New: trusted helpers. Tick \"Always allow\" on a request and their next connections are accepted without asking (list and Remove button in the app). Viewer: \"Window only\" mode."
+ },
+ {
   "versionCode": 14,
   "versionName": "0.3.7",
   "date": "2026-11-24",
