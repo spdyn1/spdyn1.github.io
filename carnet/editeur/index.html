@@ -428,6 +428,21 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
 .etatSrv.err { color: var(--red); border-color: var(--red); }
 #conflit { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 120; background: var(--mantle); border: 2px solid var(--red); border-radius: 10px; padding: 10px 14px; max-width: 92vw; display: none; box-shadow: 0 6px 24px #0008; }
 #conflit button { margin: 6px 6px 0 0; }
+/* tactile : iPad, iPhone (écran étroit = panneau des notes en tiroir ; doigt = cibles plus grandes) */
+@media (max-width: 820px) {
+  #side { position: fixed; z-index: 30; top: 0; left: 0; bottom: 0; width: min(86vw, 340px) !important; box-shadow: 4px 0 18px #000b; }
+  #poignee { display: none; }
+  #bar { padding: 6px 8px; gap: 2px; }
+  #bar .sep { margin: 0 2px; }
+  #bar #export { margin-left: 6px; }
+}
+@media (pointer: coarse) {
+  button { min-height: 40px; }
+  #bar button { padding: 8px 12px; min-width: 40px; }
+  #notes .item { padding: 12px 12px; }
+  .menuPop button, .menuCtx button { min-height: 44px; }
+  #notes, #notes .item { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+}
 </style>
 </head>
 <body>
@@ -636,7 +651,7 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
   <div class="btns"><button onclick="this.closest('dialog').close()" data-i="dlg.annuler"></button><button id="pickOk" data-i="dlg.importer"></button></div></dialog>
 
 <dialog id="helpDlg">
-  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 203 · commit 656883c · construit le 24/11/2026 15:38">v203 · 24 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
+  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 204 · commit 9520f11 · construit le 24/11/2026 15:45">v204 · 24 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
   <nav id="aideNav"></nav>
   <div id="helpCorps">
   <table class="help">
@@ -6749,6 +6764,29 @@ if (note() && !note().title) $("#title").focus();
 cleanPhotos();
 signalerSynchro();
 rappelSauvegarde();
+// ---------- Tactile (iPad, iPhone) ----------
+// iOS n'envoie pas « contextmenu » à l'appui long : on le fabrique (menus des notes, dossiers, liens). Le texte de la note garde le geste natif (sélection).
+(function () {
+  let t = 0, long = false;
+  document.addEventListener("touchstart", e => {
+    clearTimeout(t); long = false;
+    if (e.touches.length !== 1 || e.target.closest("input, textarea, select, [contenteditable], .menuCtx")) return;
+    const p = e.touches[0], cible = e.target;
+    t = setTimeout(() => {
+      long = true; navigator.vibrate?.(15);
+      cible.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: p.clientX, clientY: p.clientY }));
+    }, 550);
+  }, { passive: true });
+  document.addEventListener("touchmove", () => clearTimeout(t), { passive: true });
+  document.addEventListener("touchcancel", () => clearTimeout(t), { passive: true });
+  document.addEventListener("touchend", e => { clearTimeout(t); if (long) { e.preventDefault(); long = false; } }, { passive: false });   // le lever du doigt n'ouvre pas la note, ne ferme pas le menu
+  // écran étroit : le panneau est un tiroir. Il se ferme quand on ouvre une note ou qu'on touche à côté.
+  const etroit = () => innerWidth <= 820;
+  document.addEventListener("pointerdown", e => { if (etroit() && !$("#side").classList.contains("cache") && !e.target.closest("#side, #toggleSide, .menuCtx")) panneau(false); }, true);
+  $("#notes").addEventListener("click", e => { if (etroit() && e.target.closest(".item") && note()) panneau(false); });
+  $("#newNote").addEventListener("click", () => { if (etroit()) setTimeout(() => panneau(false)); });
+  if (etroit()) panneau(!note());
+})();
 </script>
 <script>
 // Le script principal attend que les notes soient lues dans IndexedDB (asynchrone), puis démarre comme avant.
