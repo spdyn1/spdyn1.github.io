@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 169,
+  "versionName": "1.0.69",
+  "date": "2026-11-24",
+  "notes": "Pastille de planning placée au-dessus du texte : la note retrouve toute sa largeur. Aide : en-tête de note, liens entre notes, groupe « En attente » du suivi.",
+  "notes_en": "Planning badge now sits above the text: the note regains its full width. Help: note header, links between notes, \"Waiting\" group in the tracker."
+ },
+ {
   "versionCode": 168,
   "versionName": "1.0.68",
   "date": "2026-11-24",
