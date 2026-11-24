@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 14,
+  "versionName": "0.3.7",
+  "date": "2026-11-24",
+  "notes": "Les boutons des écrans de confirmation ne passent plus sous la barre de navigation.",
+  "notes_en": "The buttons on the confirmation screens no longer slide under the navigation bar."
+ },
+ {
   "versionCode": 13,
   "versionName": "0.3.6",
   "date": "2026-11-23",
