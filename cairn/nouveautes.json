@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 38,
+  "versionName": "0.8.8",
+  "date": "2026-11-24",
+  "notes": "Accueil : le dossier ouvert reste entièrement visible, même avec le planning affiché.",
+  "notes_en": "Home: an opened folder now stays fully visible, even with the agenda card shown."
+ },
+ {
   "versionCode": 37,
   "versionName": "0.8.7",
   "date": "2026-11-23",
