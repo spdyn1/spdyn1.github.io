@@ -569,9 +569,9 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
 <dialog id="propDlg">
   <h2 data-i="prop.titre"></h2>
   <p class="aide" data-i="prop.aide"></p>
-  <label class="propLigne"><input type="checkbox" id="propBoite"> <span class="pictoBal">\uE001</span> <span data-i="prop.boite"></span></label>
-  <label class="propLigne"><input type="checkbox" id="propFrigo"> <span class="pictoBal">\uE002</span> <span data-i="prop.frigo"></span></label>
-  <label class="propLigne"><input type="checkbox" id="propFeu"> <span class="pictoBal">\uE003</span> <span data-i="prop.feu"></span></label>
+  <label class="propLigne"><input type="checkbox" id="propBoite"> <span class="pictoBal">&#xE001;</span> <span data-i="prop.boite"></span></label>
+  <label class="propLigne"><input type="checkbox" id="propFrigo"> <span class="pictoBal">&#xE002;</span> <span data-i="prop.frigo"></span></label>
+  <label class="propLigne"><input type="checkbox" id="propFeu"> <span class="pictoBal">&#xE003;</span> <span data-i="prop.feu"></span></label>
   <div class="btns"><button onclick="this.closest('dialog').close()" data-i="dlg.annuler"></button><button id="propOk">OK</button></div>
 </dialog>
 
@@ -663,7 +663,7 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
   <div class="btns"><button onclick="this.closest('dialog').close()" data-i="dlg.annuler"></button><button id="pickOk" data-i="dlg.importer"></button></div></dialog>
 
 <dialog id="helpDlg">
-  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 211 · commit d03584c · construit le 24/11/2026 22:33">v211 · 24 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
+  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 213 · commit a518877 · construit le 24/11/2026 23:05">v213 · 24 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
   <nav id="aideNav"></nav>
   <div id="helpCorps">
   <table class="help">
@@ -3527,10 +3527,12 @@ function boutNatif(txt) {
   const r = document.createRange(); r.selectNodeContents(txt); r.setEnd(s.focusNode, s.focusOffset);
   return r.toString().length;
 }
-// clic dans le vide sous le dernier paragraphe (ou à côté de la page) : curseur en fin du dernier paragraphe
+// clic dans le vide SOUS le dernier paragraphe : curseur en fin du dernier paragraphe
 $("#scroll").addEventListener("mousedown", e => {
   if (e.button !== 0 || ![$("#scroll"), $("#page"), $("#list")].includes(e.target) || $("#main").hasAttribute("data-lecture")) return;
   const v = visible(); if (!v.length) return;
+  const der = document.querySelector(`.row[data-id="${v[v.length - 1].p.id}"]`);
+  if (der && e.clientY < der.getBoundingClientRect().bottom) return;   // pas sous le dernier § : on ne bouge pas le curseur
   e.preventDefault(); focusPara(v[v.length - 1].p.id, "end");
 });
 $("#list").addEventListener("mousedown", e => {
