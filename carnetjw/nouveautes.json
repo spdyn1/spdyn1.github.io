@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 167,
+  "versionName": "1.0.67",
+  "date": "2026-11-24",
+  "notes": "Planning : la balise 📋 est maintenant obligatoire. Un paragraphe n'est une tâche de planning que s'il la porte (« Planifier » la pose tout seul) ; sans elle, 👤 📅 🏁 ⏱ ⛓ sont ignorés — fini les faux « personnes » venues des légendes et des listes. Les anciens paragraphes planifiés sans 📋 doivent être replanifiés (Planifier → OK).",
+  "notes_en": "Planning: the 📋 tag is now required. A paragraph is a planning task only if it carries it (“Schedule” adds it for you); without it 👤 📅 🏁 ⏱ ⛓ are ignored — no more fake “people” from legends and lists. Older scheduled paragraphs without 📋 must be rescheduled (Schedule → OK)."
+ },
+ {
   "versionCode": 166,
   "versionName": "1.0.66",
   "date": "2026-11-24",
