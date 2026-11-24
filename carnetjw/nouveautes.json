@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 166,
+  "versionName": "1.0.66",
+  "date": "2026-11-24",
+  "notes": "Nouveau : « Suivi du planning » (menu ⋮ de l'accueil) — toutes les tâches datées de toutes tes notes, en retard / dans les 7 jours / plus tard / terminées, avec filtre par personne 👤. Clic = ouvre la note au bon paragraphe.",
+  "notes_en": "New: “Schedule tracking” (home ⋮ menu) — every dated task from all your notes, grouped as late / due within 7 days / later / done, with a filter by person 👤. Tap = opens the note at that paragraph."
+ },
+ {
   "versionCode": 165,
   "versionName": "1.0.65",
   "date": "2026-11-23",
