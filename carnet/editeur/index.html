@@ -245,7 +245,7 @@ mark { background: var(--mk-jaune); color: var(--mk-texte); border-radius: 2px; 
 /* présentation : vue orateur (presentation.js) */
 #orateur { position: fixed; inset: 0; z-index: 40; background: var(--base); display: flex; flex-direction: column; }
 #orateur[hidden] { display: none; }
-#orateur .obar { display: flex; align-items: center; gap: 4px; padding: 8px 16px; border-bottom: 1px solid var(--surface0); flex-wrap: nowrap; }
+#orateur .obar { display: flex; align-items: center; gap: 4px; padding: 8px 16px; border-bottom: 1px solid var(--surface0); flex-wrap: wrap; row-gap: 6px; }
 #orateur .obar > * { flex-shrink: 0; white-space: nowrap; }
 #orateur .obar button { padding: 6px 10px; }
 #orateur .obar button.on { background: var(--mauve); color: var(--base); font-weight: 700; box-shadow: 0 0 0 2px var(--mauve), 0 0 10px color-mix(in srgb, var(--mauve) 60%, transparent); }
@@ -685,7 +685,7 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
   <div class="btns"><button onclick="this.closest('dialog').close()" data-i="dlg.annuler"></button><button id="pickOk" data-i="dlg.importer"></button></div></dialog>
 
 <dialog id="helpDlg">
-  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 224 · commit 4e738c4 · construit le 25/11/2026 13:36">v224 · 25 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
+  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 225 · commit f173843 · construit le 25/11/2026 13:42">v225 · 25 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
   <nav id="aideNav"></nav>
   <div id="helpCorps">
   <table class="help">
