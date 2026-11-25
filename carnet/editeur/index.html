@@ -685,7 +685,7 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
   <div class="btns"><button onclick="this.closest('dialog').close()" data-i="dlg.annuler"></button><button id="pickOk" data-i="dlg.importer"></button></div></dialog>
 
 <dialog id="helpDlg">
-  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 222 · commit 27bc435 · construit le 25/11/2026 13:24">v222 · 25 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
+  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 223 · commit 8036add · construit le 25/11/2026 13:30">v223 · 25 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
   <nav id="aideNav"></nav>
   <div id="helpCorps">
   <table class="help">
@@ -3088,12 +3088,13 @@ document.addEventListener("keydown", e => {
   selection.clear(); renderSide();
 });
 
-function menuNote(e, n, avecOuvrir) {
+/** Menu d'une note de la liste (ou d'un résultat de recherche : [bloc] = le paragraphe trouvé, sur lequel « Ouvrir à côté » s'ouvre). */
+function menuNote(e, n, avecOuvrir, bloc) {
   if (selection.has(n.uuid))                                            // clic droit dans une sélection (même d'une note) : actions de groupe
     return menuCtx(e, [["📂 " + tr("sel.deplacer", selection.size), deplacerSelection], ["🗑 " + tr("sel.supprimer", selection.size), supprimerSelection],
       ["✖ " + tr("sel.vider"), () => { selection.clear(); renderSide(); }]]);
   const dossier = n.dossier && store.dossiers[n.dossier] ? n.dossier : null;
-  const items = [["◧ " + tr("cote.menu"), () => ouvrirACote(n)], ["📂 " + tr("dos.deplacer.m"), () => deplacerNote(n)],
+  const items = [["◧ " + tr("cote.menu"), () => ouvrirACote(n, bloc)], ["📂 " + tr("dos.deplacer.m"), () => deplacerNote(n)],
     ["🗑 " + tr("sel.supprimer.une"), () => { selection.clear(); selection.add(n.uuid); supprimerSelection(); }]];
   if (avecOuvrir && dossier) items.unshift(["📁 " + tr("js.ouvrir.dossier"), () => ouvrirDossierDe(n, dossier)]);
   menuCtx(e, items);
@@ -5503,6 +5504,7 @@ const Recherche = (() => {
       b.innerHTML = `${esc(n.title || tr("js.sanstitre"))}<small>${chemin ? "📁 " + esc(chemin) + " · " : ""}${blocs.length ? tr(blocs.length > 1 ? "js.rech.para.n" : "js.rech.para.1", blocs.length) : tr("js.rech.titre")}</small>` +
         (ext ? `<span class="extrait">${ext}</span>` : "");
       b.onclick = () => ouvrir(n, blocs[0], ms);
+      b.oncontextmenu = e => menuNote(e, n, false, blocs[0]?.id);
       box.appendChild(b);
     }
   }
@@ -6277,6 +6279,7 @@ const Saut = (() => {
       b.textContent = x.n.title || tr("js.sanstitre");
       if (x.c) { const s = document.createElement("small"); s.textContent = "📁 " + x.c; b.appendChild(s); }
       b.onclick = () => aller(x.n);
+      b.oncontextmenu = e => menuNote(e, x.n, false);
       box.appendChild(b);
     });
     if (!trouvees.length) box.innerHTML = `<div class="empty">${tr("js.aucunenote")}</div>`;
