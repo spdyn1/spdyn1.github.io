@@ -373,6 +373,11 @@ dialog .btns button { padding: 7px 14px; color: var(--mauve); font-weight: 600; 
 .levels .lv { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
 .levels .lv span { flex: 1; }
 .levels .chip { width: 72px; height: 30px; border-radius: 6px; border: 1px solid var(--surface1); }
+#levelDlg { overflow-x: hidden; box-sizing: border-box; }
+#levelDlg select { width: 100%; max-width: 100%; box-sizing: border-box; margin-top: 6px; text-overflow: ellipsis; }
+#levelDlg label { display: block; }
+#levelDlg p label { display: inline; }
+.levels .chip.vide { background: repeating-linear-gradient(45deg, var(--surface0) 0 6px, var(--mantle) 6px 12px) !important; }
 #levelDlg .aide { color: var(--subtext); font-size: 14px; margin: 8px 0; }
 .suite { margin: 10px 0; }
 .suite .aide { margin: 0 0 4px; }
@@ -685,7 +690,7 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
   <div class="btns"><button onclick="this.closest('dialog').close()" data-i="dlg.annuler"></button><button id="pickOk" data-i="dlg.importer"></button></div></dialog>
 
 <dialog id="helpDlg">
-  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 225 · commit f173843 · construit le 25/11/2026 13:42">v225 · 25 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
+  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 226 · commit 82554f5 · construit le 25/11/2026 18:27">v226 · 25 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
   <nav id="aideNav"></nav>
   <div id="helpCorps">
   <table class="help">
@@ -4416,7 +4421,7 @@ function colorByLevel() {
     levels.forEach(l => {
       const row = document.createElement("div"); row.className = "lv";
       row.innerHTML = `<span style="padding-left:${l * 14}px">${l === 0 ? tr("col.niveau0") : tr("col.niveau", l)}</span>`;
-      const chip = document.createElement("button"); chip.className = "chip"; chip.style.background = bg(chosen.get(l));
+      const chip = document.createElement("button"); chip.className = "chip"; chip.style.background = bg(chosen.get(l)); if (chosen.get(l) == null || chosen.get(l) === -1) { chip.classList.add("vide"); chip.title = tr("col.no-colour"); }
       chip.onclick = () => choisir(chosen.get(l), c => chosen.set(l, c));
       row.appendChild(chip); box.appendChild(row);
     });
