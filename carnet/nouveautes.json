@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 170,
+  "versionName": "1.0.70",
+  "date": "2026-11-25",
+  "notes": "Projection : nouveau marqueur « Privé » (paragraphe jamais projeté, enjambé en avançant), comme dans l'éditeur de bureau.",
+  "notes_en": "Projection: new “Private” marker (paragraph never projected, skipped when advancing), as in the desktop editor."
+ },
+ {
   "versionCode": 169,
   "versionName": "1.0.69",
   "date": "2026-11-24",
