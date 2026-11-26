@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coucou Aidant — côté dépanneur</title>
+<style>
+  body { background: #11111b; color: #cdd6f4; font: 18px/1.5 system-ui, sans-serif; margin: 0; padding: 32px 16px; }
+  main { max-width: 32em; margin: auto; }
+  h1 { font-weight: 300; font-size: 2.4em; margin: 0 0 .2em; }
+  p, li { color: #a6adc8; }
+  a.bouton { display: inline-block; margin-top: 1em; padding: .7em 1.4em; border-radius: 99px; background: #a6e3a1; color: #11111b; text-decoration: none; font-weight: 600; }
+  a { color: #89b4fa; }
+  [data-l] { display: none; } [data-l].on { display: block; }
+  .lang { float: right; } .lang button { background: #313244; color: #cdd6f4; border: 0; border-radius: 8px; padding: 4px 10px; font: inherit; margin-left: 6px; cursor: pointer; }
+</style>
+</head>
+<body>
+<main>
+  <div class="lang"><button data-b="fr">Français</button><button data-b="en">English</button></div>
+
+  <div data-l="fr">
+    <h1>🤝 Coucou Aidant</h1>
+    <p>Tu dépannes un proche ? Cette appli affiche son écran sur ton téléphone et te laisse toucher et taper à sa place, pendant une session qu'il autorise. Elle sert aussi à piloter ton propre PC appairé.</p>
+    <a class="bouton" href="CoucouAidant.apk">Télécharger l'APK</a>
+    <p>Android 11 ou plus récent. Android te demandera d'autoriser l'installation depuis ce site. Ensuite, l'appli signale elle-même chaque nouvelle version.</p>
+    <p>La personne aidée installe <a href="../coucou/">Coucou</a>, pas celle-ci. · <a href="https://coucou.legift.fr/guide">Comment ça marche ?</a></p>
+  </div>
+
+  <div data-l="en">
+    <h1>🤝 Coucou Aidant <small>· helper app</small></h1>
+    <p>Helping someone from afar? This app shows their screen on your phone and lets you tap and type for them, during a session they allow. It can also control your own paired PC.</p>
+    <a class="bouton" href="CoucouAidant.apk">Download the APK</a>
+    <p>Android 11 or later. Android will ask you to allow installing from this site. After that, the app tells you about each new version.</p>
+    <p>The person being helped installs <a href="../coucou/">Coucou</a>, not this one. · <a href="https://coucou.legift.fr/guide?lang=en">How does it work?</a></p>
+  </div>
+</main>
+<script>
+const l = (navigator.language || 'en').startsWith('fr') ? 'fr' : 'en';
+function set(x) { document.querySelectorAll('[data-l]').forEach(e => e.classList.toggle('on', e.dataset.l === x)); document.documentElement.lang = x; }
+document.querySelectorAll('[data-b]').forEach(b => b.onclick = () => set(b.dataset.b));
+set(l);
+</script>
+</body>
+</html>
