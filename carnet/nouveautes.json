@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 172,
+  "versionName": "1.0.72",
+  "date": "2026-11-26",
+  "notes": "Corbeille : les notes supprimées y restent 30 jours, avec leurs photos (accueil ⋮ → Corbeille). Aide mise à jour.",
+  "notes_en": "Trash: deleted notes now stay there for 30 days, with their photos (home ⋮ → Trash). Help updated."
+ },
+ {
   "versionCode": 171,
   "versionName": "1.0.71",
   "date": "2026-11-25",
