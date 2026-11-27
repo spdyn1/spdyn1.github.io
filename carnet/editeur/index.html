@@ -733,7 +733,7 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
   <div class="btns"><button onclick="this.closest('dialog').close()" data-i="dlg.annuler"></button><button id="remplOk"></button></div></dialog>
 
 <dialog id="helpDlg">
-  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 236 · commit 4ff4d52 · construit le 27/11/2026 13:06">v236 · 27 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
+  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 237 · commit 1105fb1 · construit le 27/11/2026 18:27">v237 · 27 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
   <nav id="aideNav"></nav>
   <div id="helpCorps">
   <table class="help">
@@ -6166,7 +6166,14 @@ function fermerMenusBarre() { for (const m of document.querySelectorAll(".menuBa
 for (const m of document.querySelectorAll(".menuBarre")) {
   const decl = m.querySelector(".menuDecl"), pop = m.querySelector(".menuPop");
   decl.onmousedown = e => e.preventDefault();
-  decl.onclick = () => { const ouvrir = pop.hidden; fermerMenusBarre(); pop.hidden = !ouvrir; decl.classList.toggle("on", ouvrir); };
+  decl.onclick = () => {
+    const ouvrir = pop.hidden; fermerMenusBarre(); pop.hidden = !ouvrir; decl.classList.toggle("on", ouvrir);
+    if (ouvrir) {   // le menu ne doit pas déborder de la fenêtre : décalé vers la gauche si besoin
+      pop.style.left = "0"; pop.style.maxWidth = (innerWidth - 16) + "px";
+      const r = pop.getBoundingClientRect();
+      if (r.right > innerWidth - 8) pop.style.left = Math.max(-decl.getBoundingClientRect().left + 8, innerWidth - 8 - r.right) + "px";
+    }
+  };
   pop.addEventListener("mousedown", e => e.preventDefault());
   pop.addEventListener("click", e => { if (e.target.closest("button") && !e.target.closest("#zoomMoins, #zoomPlus, #calques")) fermerMenusBarre(); });
 }
