@@ -1,1 +1,1 @@
-{"versionCode": 38, "versionName": "0.8.8", "notes": "Accueil : le dossier ouvert reste entièrement visible, même avec le planning affiché.", "notes_en": "Home: an opened folder now stays fully visible, even with the agenda card shown.", "apk": "Cairn.apk", "sha256": "7ab5e5e2fb2e8fa63f0c2f9a699eb8f4df3f5021353fa41ce0b70e52bc9d14d6"}
+{"versionCode": 39, "versionName": "0.8.9", "notes": "Sécurité renforcée", "notes_en": "Stronger security", "apk": "Cairn.apk", "sha256": "0f82685278748a5933a86c3de418db17e201e1c02ad5d95e8754e427f31ef5bb"}
