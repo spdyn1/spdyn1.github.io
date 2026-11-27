@@ -1,5 +1,12 @@
 [
  {
+  "versionCode": 174,
+  "versionName": "1.0.74",
+  "date": "2026-11-27",
+  "notes": "Chercher et remplacer dans une note : un par un ou tout avec aperçu, majuscule suivie, mise en forme gardée",
+  "notes_en": "Find and replace in a note: one by one or all with a preview, capitals followed, formatting kept"
+ },
+ {
   "versionCode": 173,
   "versionName": "1.0.73",
   "date": "2026-11-27",
