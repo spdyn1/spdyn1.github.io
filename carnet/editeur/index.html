@@ -768,7 +768,7 @@ kbd { background: var(--mantle); border: 1px solid var(--surface1); border-radiu
   <div class="btns"><button onclick="this.closest('dialog').close()" data-i="dlg.annuler"></button><button id="remplOk"></button></div></dialog>
 
 <dialog id="helpDlg">
-  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 243 · commit 5791b97 · construit le 28/11/2026 07:55">v243 · 28 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
+  <div id="helpTete"><h2 data-i="help.titre"></h2><span id="aideVersion" title="Carnet — éditeur · version 244 · commit 9739814 · construit le 28/11/2026 15:04">v244 · 28 nov. 2026</span><input id="aideFiltre" type="search" autocomplete="off" data-ip="help.filtre"></div>
   <nav id="aideNav"></nav>
   <div id="helpCorps">
   <table class="help">
@@ -7045,7 +7045,7 @@ html.clair { --fond: #eff1f5; --texte: #4c4f69; --sub: #6c6f85; --accent: #8839e
   --mk-violet: color-mix(in srgb, #916fbc 60%, transparent); --mk-rouge: color-mix(in srgb, #db5d8d 60%, transparent); --mk-orange: color-mix(in srgb, #ff852f 60%, transparent); --mk-texte: inherit; }
 html.sombre { --fond: #1e1e2e; --texte: #cdd6f4; --sub: #a6adc8; --accent: #cba6f7;
   --mk-jaune: #fad928; --mk-vert: #82bd4f; --mk-bleu: #5fb3ef; --mk-violet: #916fbc; --mk-rouge: #db5d8d; --mk-orange: #ff852f; --mk-texte: #11111b; }
-body { background: var(--fond); color: var(--texte); font: var(--taille)/1.35 system-ui, "Noto Sans", sans-serif; cursor: default; }
+body { background: var(--fond); color: var(--texte); font: var(--taille)/1.35 "Balises Carnet", system-ui, "Noto Sans", sans-serif; cursor: default; }
 html.noir body { background: #000; }
 html.noir #ecran, html.noir #aide { display: none; }
 #ecran { padding: 4vh 5vw 8vh; }
@@ -7077,6 +7077,10 @@ html.sansCalques img.calque { display: none; }
 :fullscreen #aide { display: none; }
 `;
 
+  /** La police des balises d'en-tête, reprise de la page : la fenêtre du public est un document à part. */
+  const policeBalises = () => [...document.styleSheets].flatMap(f => [...f.cssRules])
+    .find(r => r instanceof CSSFontFaceRule && r.cssText.includes("Balises Carnet"))?.cssText || "";
+
   async function projeter() {
     if (P.win && !P.win.closed) { P.win.close(); P.win = null; return tout(); }
     // ouverte tout de suite (le clic autorise la fenêtre), placée ensuite sur l'autre écran si possible
@@ -7085,7 +7089,7 @@ html.sansCalques img.calque { display: none; }
     P.win = w;
     const d = w.document;
     d.open();
-    d.write(`<!doctype html><html lang="${langue}"><head><meta charset="utf-8"><title>${tr("js.pres.public.titre")}</title><style>${STYLE_PUBLIC}</style></head>` +
+    d.write(`<!doctype html><html lang="${langue}"><head><meta charset="utf-8"><title>${tr("js.pres.public.titre")}</title><style>${policeBalises()}${STYLE_PUBLIC}</style></head>` +
       `<body><div id="ecran"></div><div id="numero"></div><div id="aide">${tr("js.pres.public.aide")}</div></body></html>`);
     d.close();
     d.addEventListener("keydown", cle, true);
